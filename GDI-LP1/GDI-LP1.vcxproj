@@ -208,6 +208,7 @@
     <ResourceCompile Include="GDILP1.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="res\GDILP1.rc2" />
   </ItemGroup>
   <ItemGroup>
