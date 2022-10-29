@@ -19,6 +19,7 @@
 #include <cmath>
 
 
+
 // CGDILP1View
 
 IMPLEMENT_DYNCREATE(CGDILP1View, CView)
@@ -36,7 +37,7 @@ END_MESSAGE_MAP()
 CGDILP1View::CGDILP1View() noexcept
 {
 	// TODO: add construction code here
-
+	keyPressed = false;
 }
 
 CGDILP1View::~CGDILP1View()
@@ -63,13 +64,15 @@ void CGDILP1View::OnDraw(CDC* pDC)
 	// TODO: add draw code for native data here
 	
 	/*	C O L O U R - C O D E S - U S E D
-	* RED		RGB(255,0,0)
-	* ORANGE	RGB(255,153,51)
-	* GREEN		RGB(50,205,50)	
-	* GREY		RGB(221,221,221)
-	* YELLOW	RGB(255,255,0)
-	* PURPLE	RGB(153,0,204)
-	* BLUE		RGB(102,153,255)
+	* RED			RGB(255,0,0)
+	* ORANGE		RGB(255,153,51)
+	* GREEN			RGB(50,205,50)	
+	* GREY			RGB(221,221,221)
+	* YELLOW		RGB(255,255,0)
+	* PURPLE		RGB(153,0,204)
+	* BLUE			RGB(102,153,255)
+	* PINK			RGB(255,153,204)
+	* GRID GREY		RGB()
 	*/
 
 	//===================================================================================
@@ -79,46 +82,152 @@ void CGDILP1View::OnDraw(CDC* pDC)
 	
 	CRect rect;
 	GetClientRect(&rect);
+	//pDC->SetROP2(R2_MASKPEN);
 
-	pDC->SetMapMode(MM_ISOTROPIC);
-	pDC->SetWindowExt(500, -500);
+	//pDC->SetMapMode(MM_ISOTROPIC);
+	/*pDC->SetWindowExt(500, -500);
 	pDC->SetViewportExt(500, 500);	//(rect.right, rect.bottom);	Nemam pojma zasto ovo nije radilo
-	pDC->SetWindowOrg(-500, 500);
-	CBrush brush(RGB(211, 211, 211));
-	brush.UnrealizeObject();
-	pDC->SetBrushOrg(-250, 250);
+	pDC->SetWindowOrg(-500, 500);*/
+	CBrush* brush = new CBrush(RGB(211, 211, 211));
+	CBrush* oldBrush = pDC->SelectObject(brush);
+	//brush.UnrealizeObject();
+	//pDC->SetBrushOrg(-250, 250);
 
-	CBrush* oldBrush = pDC->SelectObject(&brush);
-	pDC->Rectangle(0, 0, -500, 500);
+	//CBrush* oldBrush = pDC->SelectObject(&brush);
+	pDC->Rectangle(0, 500, 500, 0);
 	pDC->SelectObject(oldBrush);
-	brush.DeleteObject();
-	pDC->SetBkMode(TRANSPARENT);
+	delete brush;
+	//pDC->SetBkMode(TRANSPARENT);
 
 	//===================================================================================
 	//=============================== Y E L L O W - P E N ===============================
 	//===================================================================================
 	 
-	
-	CPen* yellowPen = new CPen(PS_SOLID, 5, RGB(255, 255, 0));
+
+	LOGBRUSH logBrush;
+	logBrush.lbStyle = PS_SOLID;
+	logBrush.lbColor = RGB(255, 255, 0);
+	CPen* yellowPen = new CPen(PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_ROUND | PS_JOIN_ROUND, 5, &logBrush);
 	CPen* oldYellowPen = pDC->SelectObject(yellowPen);
 	
 	
 	//===================================================================================
-	//===================================== G R I D =====================================
+	//========================== O R A N G E - T R I A N G L E ==========================
 	//===================================================================================
-	
-	
-	
+
+
+	CBrush* orBrush = new CBrush(RGB(255, 153, 51));
+	DrawTriangle(pDC,
+		CPoint(1.25 * 25, 10 * 25),
+		CPoint(5.0 * 25, 6.25 * 25),
+		CPoint(5.0 * 25, 13.75 * 25),
+		orBrush);
+	delete orBrush;
 	
 	
 	//===================================================================================
-	//===================================== G R I D =====================================
+	//=============================== R E D - S Q U A R E ===============================
 	//===================================================================================
 
 	
+	CBrush* rBrush = new CBrush(RGB(255, 0, 0));
+	DrawTetragon(pDC,
+		CPoint(5.0 * 25, 11.25 * 25),
+		CPoint(7.50 * 25, 11.25 * 25),
+		CPoint(7.50 * 25, 8.75 * 25),
+		CPoint(5.0 * 25, 8.75 * 25),
+		rBrush);
+	delete rBrush;
 	
 	
+	//===================================================================================
+	//=========================== G R E E N - T R I A N G L E ===========================
+	//===================================================================================
+
+
+	CBrush* gBrush = new CBrush(RGB(50, 205, 50));
+	DrawTriangle(pDC,
+		CPoint(7.50 * 25, 11.25 * 25),
+		CPoint(7.50 * 25, 8.75 * 25),
+		CPoint(10 * 25, 11.25 * 25),
+		gBrush);
+	delete gBrush;
+
+
+	//===================================================================================
+	//============================ P I N K - T R I A N G L E ============================
+	//===================================================================================
+
+
+	CBrush* pBrush = new CBrush(RGB(255, 153, 204));
+	DrawTriangle(pDC,
+		CPoint(7.50 * 25, 8.75 * 25),
+		CPoint(10 * 25, 11.25 * 25),
+		CPoint(12.50 * 25, 8.75 * 25),
+		pBrush);
+	delete pBrush;
+
+
+	//===================================================================================
+	//========================== Y E L L O W - T E T R A G O N ==========================
+	//===================================================================================
+
 	
+	CBrush* yBrush = new CBrush(RGB(255, 255, 0));
+	DrawTetragon(pDC,
+		CPoint(10 * 25, 11.25 * 25),
+		CPoint(12.50 * 25, 8.75 * 25),
+		CPoint(15 * 25, 8.75 * 25),
+		CPoint(12.50 * 25, 11.25 * 25),
+		yBrush);
+	delete yBrush;
+
+
+	//===================================================================================
+	//========================= S T R I P E D - T R I A N G L E =========================
+	//===================================================================================
+
+
+	CBrush* strBrush = new CBrush(HS_HORIZONTAL, RGB(102, 153, 255));
+	DrawTriangle(pDC,
+		CPoint(12.50 * 25, 11.25 * 25),
+		CPoint(15 * 25, 8.75 * 25),
+		CPoint(15 * 25, 11.25 * 25),
+		strBrush);
+	delete strBrush;
+
+
+	//===================================================================================
+	//========================== P U R P L E - T R I A N G L E ==========================
+	//===================================================================================
+
+
+	CBrush* prBrush = new CBrush(RGB(153, 0, 204));
+	DrawTriangle(pDC,
+		CPoint(15 * 25, 6.25 * 25),
+		CPoint(15 * 25, 13.75 * 25),
+		CPoint(18.75 * 25, 10 * 25),
+		prBrush);
+	delete prBrush;
+
+
+	//===================================================================================
+	//================================= P O L Y G O N S =================================
+	//===================================================================================
+
+
+	pDC->SelectObject(oldYellowPen);
+	yellowPen->DeleteObject();
+	yellowPen = new CPen(PS_SOLID, 3, RGB(255, 255, 0));
+	pDC->SelectObject(yellowPen);
+
+	DrawRegularPolygon(pDC, 3.25*25, 10*25, 0.75*25, 6, 0);	//(CDC* pDC, int cx, int cy, int r, int n, float rotAngle)
+	DrawRegularPolygon(pDC, 10 * 25, 9.75 * 25, 0.6 * 25, 4, 0);
+	DrawRegularPolygon(pDC, 14.25 * 25, 10.5 * 25, 0.5 * 25, 7, 0);
+	DrawRegularPolygon(pDC, 8.25 * 25, 10.5 * 25, 0.5 * 25, 8, 0);
+	DrawRegularPolygon(pDC, 16.75 * 25, 10 * 25, 0.9 * 25, 5, 0);
+
+
 	//===================================================================================
 	//===================================== G R I D =====================================
 	//===================================================================================
@@ -126,6 +235,7 @@ void CGDILP1View::OnDraw(CDC* pDC)
 
 	if (keyPressed)
 	{
+		/*
 		pDC->SetBkMode(OPAQUE);
 		CBrush brush;
 		brush.CreateHatchBrush(HS_CROSS, RGB(255, 255, 255));
@@ -137,6 +247,23 @@ void CGDILP1View::OnDraw(CDC* pDC)
 		pDC->Rectangle(CRect(0, 0, -500, 500));
 		pDC->SelectObject(pOldBrush);
 		brush.DeleteObject();
+		*/
+
+		
+		CPen* gridPen = new CPen(PS_SOLID, 2, RGB(250, 250, 250));
+		CPen* oldPen = pDC->SelectObject(gridPen);
+
+		//pDC->SetROP2(R2_MASKPEN);
+
+		for (int i = 0; i < 21; i++)
+		{
+			pDC->MoveTo(i * 25, 0);
+			pDC->LineTo(i * 25, 500);
+
+
+			pDC->MoveTo(0, i * 25);
+			pDC->LineTo(500, i * 25);
+		}
 	}
 }
 
@@ -178,7 +305,19 @@ void CGDILP1View::DrawTetragon(CDC* pDC, CPoint& p1, CPoint& p2, CPoint& p3, CPo
 
 void CGDILP1View::DrawRegularPolygon(CDC* pDC, int cx, int cy, int r, int n, float rotAngle)
 {
+	pDC->SelectStockObject(NULL_BRUSH);
+	double dAngle = 2 * 3.1415926535897932384626433832795 / (double)n;
+	double angle = rotAngle;
+	CPoint* polygon = new CPoint[n];
+	for (int i = 0; i < n; i++)
+	{
+		polygon[i].x = cx + r * cos(angle);
+		polygon[i].y = cy + r * sin(angle);
+		angle += dAngle;
+	}
 
+	pDC->Polygon(polygon, n);
+	delete[] polygon;
 }
 
 
