@@ -235,9 +235,14 @@ void CGDILP1View::OnDraw(CDC* pDC)
 
 	if (keyPressed)
 	{
-		CPen* gridPen = new CPen(PS_DASH,2, RGB(250, 250, 250));
-		CPen* oldPen = pDC->SelectObject(gridPen);
+		LOGBRUSH logBrush2;
+		logBrush2.lbStyle = BS_SOLID;
+		logBrush2.lbColor = RGB(220, 220, 220);
+		
 		int oldMod = pDC->SetROP2(R2_MERGEPEN);
+		CPen* gridPen = new CPen(PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_FLAT | PS_JOIN_BEVEL, 2, &logBrush2);
+		//CPen* gridPen = new CPen(PS_SOLID, 2, RGB(255, 255, 255));
+		CPen* oldPen = pDC->SelectObject(gridPen);
 	
 		for (int i = 0; i < 21; i++)
 		{
