@@ -235,26 +235,10 @@ void CGDILP1View::OnDraw(CDC* pDC)
 
 	if (keyPressed)
 	{
-		/*
-		pDC->SetBkMode(OPAQUE);
-		CBrush brush;
-		brush.CreateHatchBrush(HS_CROSS, RGB(255, 255, 255));
-		brush.UnrealizeObject();
-		pDC->SetBrushOrg(0, 0);
-
-		CBrush* pOldBrush = pDC->SelectObject(&brush);
-		pDC->SetBkMode(TRANSPARENT);
-		pDC->Rectangle(CRect(0, 0, -500, 500));
-		pDC->SelectObject(pOldBrush);
-		brush.DeleteObject();
-		*/
-
-		
-		CPen* gridPen = new CPen(PS_SOLID, 2, RGB(250, 250, 250));
+		CPen* gridPen = new CPen(PS_DASH,2, RGB(250, 250, 250));
 		CPen* oldPen = pDC->SelectObject(gridPen);
-
-		//pDC->SetROP2(R2_MASKPEN);
-
+		int oldMod = pDC->SetROP2(R2_MERGEPEN);
+	
 		for (int i = 0; i < 21; i++)
 		{
 			pDC->MoveTo(i * 25, 0);
@@ -264,6 +248,9 @@ void CGDILP1View::OnDraw(CDC* pDC)
 			pDC->MoveTo(0, i * 25);
 			pDC->LineTo(500, i * 25);
 		}
+
+		pDC->SelectObject(oldPen);
+		pDC->SetROP2(oldMod);
 	}
 }
 
