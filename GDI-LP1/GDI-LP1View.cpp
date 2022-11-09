@@ -30,6 +30,7 @@ BEGIN_MESSAGE_MAP(CGDILP1View, CView)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
 	ON_WM_KEYDOWN()
+	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 // CGDILP1View construction/destruction
@@ -237,10 +238,10 @@ void CGDILP1View::OnDraw(CDC* pDC)
 	{
 		LOGBRUSH logBrush2;
 		logBrush2.lbStyle = BS_SOLID;
-		logBrush2.lbColor = RGB(220, 220, 220);
+		logBrush2.lbColor = RGB(225, 225, 225);
 		
 		int oldMod = pDC->SetROP2(R2_MERGEPEN);
-		CPen* gridPen = new CPen(PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_FLAT | PS_JOIN_BEVEL, 2, &logBrush2);
+		CPen* gridPen = new CPen(PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_FLAT | PS_JOIN_BEVEL, 3, &logBrush2);
 		//CPen* gridPen = new CPen(PS_SOLID, 2, RGB(255, 255, 255));
 		CPen* oldPen = pDC->SelectObject(gridPen);
 	
@@ -379,4 +380,12 @@ void CGDILP1View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		Invalidate();
 	}
 	CView::OnKeyDown(nChar, nRepCnt, nFlags);
+}
+
+
+BOOL CGDILP1View::OnEraseBkgnd(CDC* pDC)
+{
+	// TODO: Add your message handler code here and/or call default
+	return TRUE;
+	//return CView::OnEraseBkgnd(pDC);
 }
