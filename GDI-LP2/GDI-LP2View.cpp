@@ -66,32 +66,31 @@ void CGDILP2View::OnDraw(CDC* pDC)
 	if (!pDoc)
 		return;
 
+	// TODO: add draw code for native data here
+
+	
 	CRect rect;
 	GetClientRect(&rect);
-
 	CDC* memDC = new CDC();
-
 	memDC->CreateCompatibleDC(pDC);
-
 	CBitmap img;
-
 	img.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height());
 	memDC->SelectObject(img);
-	//memDC->SetBkColor(RGB(255, 255, 255));
 
 	CRgn region;
 	region.CreateRectRgnIndirect(SetRegion(memDC));
-
-	DrawBackground(memDC);
-	//DrawCactus(memDC);
-	DrawPot(memDC);
-
-	if (drawGrid) DrawGrid(memDC);
-	// TODO: add draw code for native data here
-
-	memDC->SelectClipRgn(&region); 
 	
+	DrawBackground(memDC);
+	DrawCactus(memDC);
+
+
+	DrawPot(memDC);
+	PrintName(memDC);
+	if (drawGrid) DrawGrid(memDC);
+
+	memDC->SelectClipRgn(&region); 	
 	pDC->BitBlt(0, 0, rect.Width(), rect.Height(), memDC, 0, 0, SRCCOPY);
+	
 	delete memDC;
 }
 
@@ -128,7 +127,6 @@ void CGDILP2View::DrawPot(CDC* pDC)
 {
 	CBrush* pottyMcPottyface = new CBrush(RGB(222, 148, 0));
 	CBrush* oldBrush = pDC->SelectObject(pottyMcPottyface);
-//	CBrush* oldBrush = pDC->SelectObject(new CBrush(RGB(222, 148, 0)));
 
 	CPoint* baza = new CPoint[4]();
 	baza[0] = CPoint(200, 450);
@@ -141,13 +139,212 @@ void CGDILP2View::DrawPot(CDC* pDC)
 	pDC->Rectangle(190, 430, 310, 450);
 
 	pDC->SelectObject(oldBrush);
+
+
+}
+
+
+void CGDILP2View::DrawCactus(CDC* pDC)
+{
+	CBrush* brush = new CBrush(RGB(0, 204, 0));
+	CBrush* oldBrush = pDC->SelectObject(brush);
+	XFORM oldForm;
+
+	int oldMode = pDC->SetGraphicsMode(GM_ADVANCED);
+	pDC->GetWorldTransform(&oldForm);
+
+	SetTransformation0(pDC);
+	PlayEnhMetaFile(pDC->m_hDC, emf_cactus_light, CRect(250 - (30 / 1), 350, 250 + (30 / 1), 425));
+	DrawMiddle(pDC);
+
+	pDC->Ellipse(250 - 10, 350 - 10, 250 + 10, 350 + 10);
+	pDC->Ellipse(250 - 10, 17 * 25 - 10, 250 + 10, 17 * 25 + 10);
+
+	pDC->SetWorldTransform(&oldForm);
+	pDC->SelectObject(oldBrush);
+	delete brush;
+	pDC->SetGraphicsMode(oldMode);
+}
+
+
+void CGDILP2View::PrintName(CDC* pDC)
+{
+	XFORM oldForm;
+	int oldMode = pDC->SetGraphicsMode(GM_ADVANCED);
+	pDC->GetWorldTransform(&oldForm);
+
+	SetRotation(pDC, Pi / 2.0, 475, 25);
+
+	CString* name = new CString("17805 Andrija Mitic");
+	CFont* font = new CFont();
+	font->CreateFontW(35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, CString("Arial"));
+	CFont* oldFont = pDC->SelectObject(font);
+	CPoint textPosition(475, 25);
+	pDC->SetBkMode(TRANSPARENT);
+
+	COLORREF oldColor = pDC->SetTextColor(RGB(0, 0, 0));
+	pDC->TextOutW(textPosition.x + 1, textPosition.y + 1, *name);
+	pDC->SetTextColor(RGB(255, 255, 0));
+	pDC->TextOutW(textPosition.x, textPosition.y, *name);
+
+	pDC->SelectObject(oldFont);
+	pDC->SetTextColor(oldColor);
+	pDC->SetBkMode(OPAQUE);
+	delete font;
+	delete name;
+	pDC->SetWorldTransform(&oldForm);
+	pDC->SetGraphicsMode(oldMode);
+
+}
+
+void CGDILP2View::DrawMiddle(CDC* pDC)
+{
+	XFORM saveForm, form, oldForm;
+	pDC->GetWorldTransform(&oldForm);
+	//Postavljamo manju promenjivu rotaciju 
+	SetTransformation1(pDC);
+
+	PlayEnhMetaFile(pDC->m_hDC, emf_cactus_light, CRect(250 - (30 / 3), 275, 250 + 30 / 3, 350));
+	pDC->GetWorldTransform(&saveForm);
+
+
+	pDC->SetWorldTransform(&saveForm);
+	pDC->SetWorldTransform(&oldForm);
+
+
+
+
+
+
+	/*
+	PlayEnhMetaFile(pDC->m_hDC, emf_cactus_light, CRect(250 - (30 / 3), 275, 250 + (30 / 3), 350));
+	pDC->GetWorldTransform(&saveForm);
+	//Ovde smo pod uticajem obe promenjive transformacije
+
+	//Prvo rotiramo za Pi/4
+	const double angleStep4 = Pi / 4;
+
+	SetRotation(pDC, angleStep4, 250, 275);
+
+	//Gornji desni deo
+	PlayEnhMetaFile(pDC->m_hDC, emf_cactus, CRect(250 - (30 / 3), 200, 250 + (30 / 3), 275));
+	PlayEnhMetaFile(pDC->m_hDC, emf_cactus, CRect(250 - (30 / 1), 125, 250 + (30 / 1), 200));
+	pDC->Ellipse(250 - 10, 200 - 10, 250 + 10, 200 + 10);
+
+	//Vracamo uticaj na samo promenjive transformacije
+	pDC->SetWorldTransform(&saveForm);
+	//Crtamo gornji deo
+	PlayEnhMetaFile(pDC->m_hDC, emf_cactus, CRect(250 - (30 / 3), 200, 250 + (30 / 3), 275));
+	PlayEnhMetaFile(pDC->m_hDC, emf_cactus, CRect(250 - (30 / 1), 125, 250 + (30 / 1), 200));
+	pDC->Ellipse(250 - 10, 200 - 10, 250 + 10, 200 + 10);
+
+	//Rotiramo za -Pi/4, a pod uticajem smo obe promenjive transformacije
+
+	SetRotation(pDC, -angleStep4, 250, 275);
+
+	PlayEnhMetaFile(pDC->m_hDC, emf_cactus, CRect(250 - (30 / 3), 200, 250 + (30 / 3), 275));
+
+	//Vracamo uticaj na samo promenjive transformacije
+	pDC->SetWorldTransform(&saveForm);
+	//Crtamo krugove koji su ispred kaktusa i koji su pod uticajem obe promenjive transformacije
+	pDC->Ellipse(250 - 10, 275 - 10, 250 + 10, 275 + 10);
+	pDC->Ellipse(250 - 10, 200 - 10, 250 + 10, 200 + 10);
+
+	pDC->SetWorldTransform(&oldForm);*/
 }
 
 
 
+void CGDILP2View::DrawLeft(CDC* pDC)
+{
+
+}
+
+
+
+void CGDILP2View::DrawRight(CDC* pDC)
+{
+
+}
+//void CGDILP2View::
+
+
+
+
+
+void CGDILP2View::SetTransformation0(CDC* pDC)
+{
+	XFORM  form1;
+
+	form1 = {
+		cosf(angle0),
+		sinf(angle0),
+		-sinf(angle0),
+		cosf(angle0),
+		250,
+		425
+	};
+	pDC->SetWorldTransform(&form1);
+
+	form1 = {
+		1,
+		0,
+		0,
+		1,
+		-250,
+		-425
+	};
+	pDC->ModifyWorldTransform(&form1, MWT_LEFTMULTIPLY);
+}
+void CGDILP2View::SetTransformation1(CDC* pDC)
+{
+	XFORM form2;
+	form2 = {
+		cosf(angle1),
+		sinf(angle1),
+		-sinf(angle1),
+		cosf(angle1),
+		250,
+		350
+	};
+	pDC->ModifyWorldTransform(&form2, MWT_LEFTMULTIPLY);
+	form2 = {
+		1,
+		0,
+		0,
+		1,
+		-250,
+		-350
+	};
+	pDC->ModifyWorldTransform(&form2, MWT_LEFTMULTIPLY);
+}
+void CGDILP2View::SetRotation(CDC* pDC, float angle, float x, float y)
+{
+	XFORM form;
+	form = {
+		cosf(angle),
+		sinf(angle),
+		-sinf(angle),
+		cosf(angle),
+		x,
+		y
+	};
+	pDC->ModifyWorldTransform(&form, MWT_LEFTMULTIPLY);
+	form = {
+		1,
+		0,
+		0,
+		1,
+		-x,
+		-y
+	};
+	pDC->ModifyWorldTransform(&form, MWT_LEFTMULTIPLY);
+}
+
+
 void CGDILP2View::DrawGrid(CDC* pDC)
 {
-	//int oldMode = pDC->SetROP2(R2_MERGEPEN);
+	int oldMode = pDC->SetROP2(R2_MERGEPEN);
 	CPen* whPen = new CPen(PS_GEOMETRIC, 2, RGB(255, 255, 255));
 	CPen* oldPen = pDC->SelectObject(whPen);
 	for (int i = 1; i < 20; i++)
@@ -158,22 +355,25 @@ void CGDILP2View::DrawGrid(CDC* pDC)
 		pDC->LineTo(500, i * 25);
 	}
 	pDC->SelectObject(oldPen);
-	//pDC->SetROP2(oldMode);
+	pDC->SetROP2(oldMode);
 }
 
 void CGDILP2View::Translate(CDC* pDC, float dX, float dY, bool rightMultiply)
 {
-
+	XFORM form = { 1, 0, 0, 1, dX, dY };
+	pDC->ModifyWorldTransform(&form, rightMultiply ? MWT_RIGHTMULTIPLY : MWT_LEFTMULTIPLY);
 }
 
 void CGDILP2View::Scale(CDC* pDC, float sX, float sY, bool rightMultiply)
 {
-
+	XFORM form = { sX, 0, 0, sY, 0, 0 };
+	pDC->ModifyWorldTransform(&form, rightMultiply ? MWT_RIGHTMULTIPLY : MWT_LEFTMULTIPLY);
 }
 
 void CGDILP2View::Rotate(CDC* pDC, float angle, bool rightMultiply)
 {
-
+	XFORM form = { cos(angle), sin(angle), -sin(angle), cos(angle), 0, 0 };
+	pDC->ModifyWorldTransform(&form, rightMultiply ? MWT_RIGHTMULTIPLY : MWT_LEFTMULTIPLY);
 }
 
 

@@ -33,6 +33,14 @@ public:
 	void Rotate(CDC* pDC, float angle, bool rightMultiply);
 	void DrawFigure(CDC* pDC);
 	void DrawPot(CDC* pDC);
+	void DrawCactus(CDC* pDC);
+	void PrintName(CDC* pDC);
+	void DrawMiddle(CDC* pDC);
+	void DrawLeft(CDC* pDC);
+	void DrawRight(CDC* pDC);
+	void SetTransformation0(CDC* pDC);
+	void SetTransformation1(CDC* pDC);
+	void SetRotation(CDC* pDC, float angle, float x, float y);
 	void DrawGrid(CDC* pDC);
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 protected:
