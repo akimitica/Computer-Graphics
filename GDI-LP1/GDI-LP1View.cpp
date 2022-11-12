@@ -83,22 +83,11 @@ void CGDILP1View::OnDraw(CDC* pDC)
 	
 	CRect rect;
 	GetClientRect(&rect);
-	//pDC->SetROP2(R2_MASKPEN);
-
-	//pDC->SetMapMode(MM_ISOTROPIC);
-	/*pDC->SetWindowExt(500, -500);
-	pDC->SetViewportExt(500, 500);	//(rect.right, rect.bottom);	Nemam pojma zasto ovo nije radilo
-	pDC->SetWindowOrg(-500, 500);*/
 	CBrush* brush = new CBrush(RGB(211, 211, 211));
 	CBrush* oldBrush = pDC->SelectObject(brush);
-	//brush.UnrealizeObject();
-	//pDC->SetBrushOrg(-250, 250);
-
-	//CBrush* oldBrush = pDC->SelectObject(&brush);
 	pDC->Rectangle(0, 500, 500, 0);
 	pDC->SelectObject(oldBrush);
 	delete brush;
-	//pDC->SetBkMode(TRANSPARENT);
 
 	//===================================================================================
 	//=============================== Y E L L O W - P E N ===============================
