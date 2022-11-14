@@ -22,9 +22,11 @@ public:
 // Overrides
 public:
 	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
+	CRect* SetRegion(CDC* pDC);
 	void DrawTriangle(CDC* pDC, CPoint& p1, CPoint& p2, CPoint& p3, CBrush* brush);
 	void DrawTetragon(CDC* pDC, CPoint& p1, CPoint& p2, CPoint& p3, CPoint& p4, CBrush* brush);
 	void DrawRegularPolygon(CDC* pDC, int cx, int cy, int r, int n, float rotAngle);
+	void DrawGrid(CDC* pDC);
 	double getX(int radius, float angle);
 	double GetY(int radius, float angle);
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);

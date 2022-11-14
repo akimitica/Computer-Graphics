@@ -80,13 +80,22 @@ void CGDILP1View::OnDraw(CDC* pDC)
 	//=============================== B A C K G R O U N D =============================== 
 	//===================================================================================
 	
-	
+
 	CRect rect;
 	GetClientRect(&rect);
+	CDC* memDC = new CDC();
+	memDC->CreateCompatibleDC(pDC);
+	CBitmap img;
+	img.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height());
+	memDC->SelectObject(img);
+
+	CRgn region;
+	region.CreateRectRgnIndirect(SetRegion(memDC));
+	
 	CBrush* brush = new CBrush(RGB(211, 211, 211));
-	CBrush* oldBrush = pDC->SelectObject(brush);
-	pDC->Rectangle(0, 500, 500, 0);
-	pDC->SelectObject(oldBrush);
+	CBrush* oldBrush = memDC->SelectObject(brush);
+	memDC->Rectangle(0, 500, 500, 0);
+	memDC->SelectObject(oldBrush);
 	delete brush;
 
 	//===================================================================================
@@ -98,7 +107,7 @@ void CGDILP1View::OnDraw(CDC* pDC)
 	logBrush.lbStyle = PS_SOLID;
 	logBrush.lbColor = RGB(255, 255, 0);
 	CPen* yellowPen = new CPen(PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_ROUND | PS_JOIN_ROUND, 5, &logBrush);
-	CPen* oldYellowPen = pDC->SelectObject(yellowPen);
+	CPen* oldYellowPen = memDC->SelectObject(yellowPen);
 	
 	
 	//===================================================================================
@@ -107,7 +116,7 @@ void CGDILP1View::OnDraw(CDC* pDC)
 
 
 	CBrush* orBrush = new CBrush(RGB(255, 153, 51));
-	DrawTriangle(pDC,
+	DrawTriangle(memDC,
 		CPoint(1.25 * 25, 10 * 25),
 		CPoint(5.0 * 25, 6.25 * 25),
 		CPoint(5.0 * 25, 13.75 * 25),
@@ -121,7 +130,7 @@ void CGDILP1View::OnDraw(CDC* pDC)
 
 	
 	CBrush* rBrush = new CBrush(RGB(255, 0, 0));
-	DrawTetragon(pDC,
+	DrawTetragon(memDC,
 		CPoint(5.0 * 25, 11.25 * 25),
 		CPoint(7.50 * 25, 11.25 * 25),
 		CPoint(7.50 * 25, 8.75 * 25),
@@ -136,7 +145,7 @@ void CGDILP1View::OnDraw(CDC* pDC)
 
 
 	CBrush* gBrush = new CBrush(RGB(50, 205, 50));
-	DrawTriangle(pDC,
+	DrawTriangle(memDC,
 		CPoint(7.50 * 25, 11.25 * 25),
 		CPoint(7.50 * 25, 8.75 * 25),
 		CPoint(10 * 25, 11.25 * 25),
@@ -150,7 +159,7 @@ void CGDILP1View::OnDraw(CDC* pDC)
 
 
 	CBrush* pBrush = new CBrush(RGB(255, 153, 204));
-	DrawTriangle(pDC,
+	DrawTriangle(memDC,
 		CPoint(7.50 * 25, 8.75 * 25),
 		CPoint(10 * 25, 11.25 * 25),
 		CPoint(12.50 * 25, 8.75 * 25),
@@ -164,7 +173,7 @@ void CGDILP1View::OnDraw(CDC* pDC)
 
 	
 	CBrush* yBrush = new CBrush(RGB(255, 255, 0));
-	DrawTetragon(pDC,
+	DrawTetragon(memDC,
 		CPoint(10 * 25, 11.25 * 25),
 		CPoint(12.50 * 25, 8.75 * 25),
 		CPoint(15 * 25, 8.75 * 25),
@@ -179,7 +188,7 @@ void CGDILP1View::OnDraw(CDC* pDC)
 
 
 	CBrush* strBrush = new CBrush(HS_HORIZONTAL, RGB(102, 153, 255));
-	DrawTriangle(pDC,
+	DrawTriangle(memDC,
 		CPoint(12.50 * 25, 11.25 * 25),
 		CPoint(15 * 25, 8.75 * 25),
 		CPoint(15 * 25, 11.25 * 25),
@@ -193,7 +202,7 @@ void CGDILP1View::OnDraw(CDC* pDC)
 
 
 	CBrush* prBrush = new CBrush(RGB(153, 0, 204));
-	DrawTriangle(pDC,
+	DrawTriangle(memDC,
 		CPoint(15 * 25, 6.25 * 25),
 		CPoint(15 * 25, 13.75 * 25),
 		CPoint(18.75 * 25, 10 * 25),
@@ -206,16 +215,16 @@ void CGDILP1View::OnDraw(CDC* pDC)
 	//===================================================================================
 
 
-	pDC->SelectObject(oldYellowPen);
+	memDC->SelectObject(oldYellowPen);
 	yellowPen->DeleteObject();
 	yellowPen = new CPen(PS_SOLID, 3, RGB(255, 255, 0));
-	pDC->SelectObject(yellowPen);
+	memDC->SelectObject(yellowPen);
 
-	DrawRegularPolygon(pDC, 3.25*25, 10*25, 0.75*25, 6, 0);	//(CDC* pDC, int cx, int cy, int r, int n, float rotAngle)
-	DrawRegularPolygon(pDC, 10 * 25, 9.75 * 25, 0.6 * 25, 4, 0);
-	DrawRegularPolygon(pDC, 14.25 * 25, 10.5 * 25, 0.5 * 25, 7, 0);
-	DrawRegularPolygon(pDC, 8.25 * 25, 10.5 * 25, 0.5 * 25, 8, 0);
-	DrawRegularPolygon(pDC, 16.75 * 25, 10 * 25, 0.9 * 25, 5, 0);
+	DrawRegularPolygon(memDC, 3.25*25, 10*25, 0.75*25, 6, 0);	//(CDC* pDC, int cx, int cy, int r, int n, float rotAngle)
+	DrawRegularPolygon(memDC, 10 * 25, 9.75 * 25, 0.6 * 25, 4, 0);
+	DrawRegularPolygon(memDC, 14.25 * 25, 10.5 * 25, 0.5 * 25, 7, 0);
+	DrawRegularPolygon(memDC, 8.25 * 25, 10.5 * 25, 0.5 * 25, 8, 0);
+	DrawRegularPolygon(memDC, 16.75 * 25, 10 * 25, 0.9 * 25, 5, 0);
 
 
 	//===================================================================================
@@ -223,31 +232,31 @@ void CGDILP1View::OnDraw(CDC* pDC)
 	//===================================================================================
 
 
-	if (keyPressed)
-	{
-		LOGBRUSH logBrush2;
-		logBrush2.lbStyle = BS_SOLID;
-		logBrush2.lbColor = RGB(225, 225, 225);
-		
-		int oldMod = pDC->SetROP2(R2_MERGEPEN);
-		CPen* gridPen = new CPen(PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_FLAT | PS_JOIN_BEVEL, 3, &logBrush2);
-		//CPen* gridPen = new CPen(PS_SOLID, 2, RGB(255, 255, 255));
-		CPen* oldPen = pDC->SelectObject(gridPen);
-	
-		for (int i = 0; i < 21; i++)
-		{
-			pDC->MoveTo(i * 25, 0);
-			pDC->LineTo(i * 25, 500);
+	if (keyPressed) DrawGrid(memDC);
 
 
-			pDC->MoveTo(0, i * 25);
-			pDC->LineTo(500, i * 25);
-		}
+	//===================================================================================
+	//====================== M O V I N G - m e m D C - T O - p D C ======================
+	//===================================================================================
 
-		pDC->SelectObject(oldPen);
-		pDC->SetROP2(oldMod);
-	}
+	memDC->SelectClipRgn(&region);
+	pDC->BitBlt(0, 0, rect.Width(), rect.Height(), memDC, 0, 0, SRCCOPY);
+
+	delete memDC;
 }
+
+//Region creation
+
+CRect* CGDILP1View::SetRegion(CDC* pDC)
+{
+	CRect res;
+	pDC->GetClipBox(res);
+	CRgn region;
+	region.CreateRectRgn(0, 0, 500, 500);
+	pDC->SelectClipRgn(&region);
+	return &res;
+}
+
 
 //Used to draw triangles
 
@@ -302,6 +311,30 @@ void CGDILP1View::DrawRegularPolygon(CDC* pDC, int cx, int cy, int r, int n, flo
 	delete[] polygon;
 }
 
+void CGDILP1View::DrawGrid(CDC* pDC)
+{
+	LOGBRUSH logBrush2;
+	logBrush2.lbStyle = BS_SOLID;
+	logBrush2.lbColor = RGB(225, 225, 225);
+
+	int oldMod = pDC->SetROP2(R2_MERGEPEN);
+	CPen* gridPen = new CPen(PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_FLAT | PS_JOIN_BEVEL, 3, &logBrush2);
+	//CPen* gridPen = new CPen(PS_SOLID, 2, RGB(255, 255, 255));
+	CPen* oldPen = pDC->SelectObject(gridPen);
+
+	for (int i = 0; i < 21; i++)
+	{
+		pDC->MoveTo(i * 25, 0);
+		pDC->LineTo(i * 25, 500);
+
+
+		pDC->MoveTo(0, i * 25);
+		pDC->LineTo(500, i * 25);
+	}
+
+	pDC->SelectObject(oldPen);
+	pDC->SetROP2(oldMod);
+}
 
 double CGDILP1View::getX(int radius, float angle)
 {

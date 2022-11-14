@@ -39,7 +39,6 @@ CGDILP2View::CGDILP2View() noexcept
 {
 	// TODO: add construction code here
 	emf_cactus = GetEnhMetaFile(CString("cactus_part.emf"));
-	//emf_cactus_light 
 	emf_cactus_light= GetEnhMetaFile(CString("cactus_part_light.emf"));
 	angle0 = 0;
 	angle1 = 0;
@@ -255,9 +254,9 @@ void CGDILP2View::DrawFigure(CDC* pDC, HENHMETAFILE cactus, float sX, float sY, 
 	XFORM oldXForm;
 	pDC->GetWorldTransform(&oldXForm);
 
-	Translate(pDC, tX + SQUARE / 2, tY + SQUARE / 2, rightMul);
+	Translate(pDC, tX + SQUARE / (float)2, tY + SQUARE / (float)2, rightMul);
 	Rotate(pDC, DegToRad(rotAngle), rightMul);
-	Translate(pDC, -SQUARE / 2, -SQUARE / 2, rightMul);
+	Translate(pDC, -SQUARE / (float)2, -SQUARE / (float)2, rightMul);
 	Scale(pDC, sX, sY, rightMul);
 	PlayEnhMetaFile(*pDC, cactus, CRect(0, 0, SQUARE, SQUARE));
 
@@ -305,7 +304,6 @@ void CGDILP2View::Scale(CDC* pDC, float sX, float sY, bool rightMultiply)
 
 void CGDILP2View::Rotate(CDC* pDC, float angle, bool rightMultiply)
 {
-	//float deg = angle / 360 * (2 * Pi);
 	XFORM form = { cos(angle), sin(angle), -sin(angle), cos(angle), 0, 0};
 	pDC->ModifyWorldTransform(&form, rightMultiply ? MWT_RIGHTMULTIPLY : MWT_LEFTMULTIPLY);
 }
