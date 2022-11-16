@@ -93,6 +93,7 @@ void CGDILP2View::OnDraw(CDC* pDC)
 	Translate(memDC, 10 * SQUARE, 17 * SQUARE, false);
 	Rotate(memDC, DegToRad(angle0), false);
 	Translate(memDC, -10 * SQUARE, -17 * SQUARE, false);
+	
 	DrawCactus(memDC);
 	
 	memDC->SetWorldTransform(&oldForm);
@@ -102,7 +103,7 @@ void CGDILP2View::OnDraw(CDC* pDC)
 	if (drawGrid) DrawGrid(memDC);
 
 	memDC->SelectClipRgn(&region); 	
-	pDC->BitBlt(0, 0, rect.Width(), rect.Height(), memDC, 0, 0, SRCCOPY);
+	pDC->BitBlt(0, 0, 500, 500, memDC, 0, 0, SRCCOPY);
 	
 	delete memDC;
 }
