@@ -20,6 +20,7 @@
 
 #define SQUARE 25
 #define PI 3.1415926535897932384626433832795
+#define ANGMOV 5
 
 // CGDILP3View
 
@@ -31,6 +32,7 @@ BEGIN_MESSAGE_MAP(CGDILP3View, CView)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
 	ON_WM_ERASEBKGND()
+	ON_WM_KEYDOWN()
 END_MESSAGE_MAP()
 
 // CGDILP3View construction/destruction
@@ -45,12 +47,12 @@ CGDILP3View::CGDILP3View() noexcept
 	pieces[0][0].Load(CString("Bitmaps/download.dib"));
 	pieces[0][1].Load(CString("Bitmaps/download8.dib"));
 	pieces[0][2].Load(CString("Bitmaps/download3.dib"));
-	pieces[1][0].Load(CString("Bitmaps/download5.dib"));
+	pieces[1][0].Load(CString("Bitmaps/download6.dib"));
 	pieces[1][1].Load(CString("Bitmaps/download1.dib"));
-	pieces[1][2].Load(CString("Bitmaps/download6.dib"));
-	pieces[2][0].Load(CString("Bitmaps/download7.dib"));
+	pieces[1][2].Load(CString("Bitmaps/download5.dib"));
+	pieces[2][0].Load(CString("Bitmaps/download4.dib"));
 	pieces[2][1].Load(CString("Bitmaps/download2.dib"));
-	pieces[2][2].Load(CString("Bitmaps/download4.dib"));
+	pieces[2][2].Load(CString("Bitmaps/download7.dib"));
 
 	/*for (int i = 0; i < 3; i++)
 	{
@@ -58,6 +60,8 @@ CGDILP3View::CGDILP3View() noexcept
 			PaintItGrey(pieces[i][j]);
 	}*/
 
+	angle = 0;
+	xx = 2;
 
 }
 
@@ -250,23 +254,100 @@ void CGDILP3View::OnDraw(CDC* pDC)
 	CRgn region;
 	region.CreateRectRgnIndirect(SetRegion(memDC));
 
-	DrawBackground(memDC);
 
 	int oldMode = memDC->SetGraphicsMode(GM_ADVANCED);
-	XFORM oldForm;
+	XFORM oldForm,mainForm;
+	memDC->GetWorldTransform(&mainForm);
+
+	Translate(memDC, 10 * SQUARE, 10 * SQUARE, false);
+	Rotate(memDC, DegToRad(-90), false);
+	Translate(memDC, -10 * SQUARE, -10 * SQUARE, false);
+
+	DrawBackground(memDC);
+
 	memDC->GetWorldTransform(&oldForm);
 
-	//DrawTransparent(memDC, &pieces[0][0], -22, 22);
+	
+	//0.0
 
-
-	Translate(memDC, 128, 128, false);
-	//Mirror(memDC, false, true, false);
-	Rotate(memDC, DegToRad(115), false);
-	Translate(memDC, -(128) - SQUARE, -(128) - SQUARE, false);
+	Translate(memDC, 105, 105, false);
+	Rotate(memDC, DegToRad(angle * ANGMOV + 115), false);
+	Translate(memDC, -(128), -(128), false);
 	DrawTransparent(memDC, &pieces[0][0], 0, 0);
 	memDC->SetWorldTransform(&oldForm);
 
 
+	//0.1
+
+	Translate(memDC, 103+6*SQUARE, 93, false);
+	Rotate(memDC, DegToRad(angle * ANGMOV + 17), false);
+	Translate(memDC, -(128), -(128), false);
+	DrawTransparent(memDC, &pieces[0][1], 0, 0);
+	memDC->SetWorldTransform(&oldForm);
+
+	
+	//0.2
+
+	Translate(memDC, 93 + 2 * 6 * SQUARE, 93, false);
+	Rotate(memDC, DegToRad(angle * ANGMOV - 71), false);
+	Translate(memDC, -(128), -(128), false);
+	DrawTransparent(memDC, &pieces[0][2], 0, 0);
+	memDC->SetWorldTransform(&oldForm);
+
+	//1.0
+
+	Translate(memDC, 101, 109 + 6 * SQUARE, false);
+	Rotate(memDC, DegToRad(angle * ANGMOV + 145), false);
+	Translate(memDC, -(128), -(128), false);
+	DrawTransparent(memDC, &pieces[1][0], 0, 0);
+	memDC->SetWorldTransform(&oldForm);
+
+	//1.1
+
+	Translate(memDC, 98 + 6 * SQUARE, 91 + 6 * SQUARE, false);
+	Rotate(memDC, DegToRad(angle * ANGMOV - 32), false);
+	Translate(memDC, -(128), -(128), false);
+	DrawTransparent(memDC, &pieces[1][1], 0, 0);
+	memDC->SetWorldTransform(&oldForm);
+
+	//1.2
+
+	Translate(memDC, 105 + 2 * 6 * SQUARE, 93 +  6 * SQUARE, false);
+	Rotate(memDC, DegToRad(angle * ANGMOV + 23), false);
+	Translate(memDC, -(128), -(128), false);
+	DrawTransparent(memDC, &pieces[1][2], 0, 0);
+	memDC->SetWorldTransform(&oldForm);
+
+	//2.0
+
+	Translate(memDC, 94, 107 + 2 * 6 * SQUARE, false);
+	Rotate(memDC, DegToRad(angle * ANGMOV + 194), false);
+	Translate(memDC, -(128), -(128), false);
+	DrawTransparent(memDC, &pieces[2][0], 0, 0);
+	memDC->SetWorldTransform(&oldForm);
+
+	//2.1
+
+	Translate(memDC, 100 + 6 * SQUARE, 92 + 2 * 6 * SQUARE, false);
+	Rotate(memDC, DegToRad(angle * ANGMOV - 18), false);
+	Translate(memDC, -(128), -(128), false);
+	DrawTransparent(memDC, &pieces[2][1], 0, 0);
+	memDC->SetWorldTransform(&oldForm);
+
+	//2.2
+
+	Translate(memDC, 108 + 2 * 6 * SQUARE, 100 + 2 * 6 * SQUARE, false);
+	Rotate(memDC, DegToRad(angle * ANGMOV + 71), false);
+	Translate(memDC, -(128), -(128), false);
+	DrawTransparent(memDC, &pieces[2][2], 0, 0);
+	memDC->SetWorldTransform(&oldForm);
+
+
+
+	
+
+
+	memDC->SetWorldTransform(&mainForm);
 	memDC->SetGraphicsMode(oldMode);
 	memDC->SelectClipRgn(&region);
 	pDC->BitBlt(0, 0, 500, 500, memDC, 0, 0, SRCCOPY);
@@ -323,4 +404,30 @@ BOOL CGDILP3View::OnEraseBkgnd(CDC* pDC)
 	// TODO: Add your message handler code here and/or call default
 	return TRUE;
 	//return CView::OnEraseBkgnd(pDC);
+}
+
+
+void CGDILP3View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+	// TODO: Add your message handler code here and/or call default
+	switch (nChar)
+	{
+	case VK_LEFT:
+		angle++;
+		Invalidate();
+		break;
+	case VK_RIGHT:
+		angle--;
+		Invalidate();
+		break;
+	case VK_UP:
+		xx += SQUARE;
+		Invalidate();
+		break;
+	default:
+		break;
+	}
+
+
+	CView::OnKeyDown(nChar, nRepCnt, nFlags);
 }

@@ -17,6 +17,8 @@ public:
 	CGDILP3Doc* GetDocument() const;
 
 	DImage** pieces;
+	float angle;
+	float xx;
 
 // Operations
 public:
@@ -54,6 +56,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 };
 
 #ifndef _DEBUG  // debug version in GDI-LP3View.cpp
