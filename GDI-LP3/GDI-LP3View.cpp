@@ -57,7 +57,7 @@ CGDILP3View::CGDILP3View() noexcept
 	for (int i = 0; i < 3; i++)
 	{
 		for (int j = 0; j < 3; j++)
-			if (i == 1 && j == 0)
+			if (i == 1 && j == 2)
 				PaintItBlue(&pieces[i][j]);
 			else
 				PaintItGrey(&pieces[i][j]);
@@ -292,6 +292,7 @@ void CGDILP3View::OnDraw(CDC* pDC)
 	memDC->GetWorldTransform(&mainForm);
 
 	Translate(memDC, 10 * SQUARE, 10 * SQUARE, false);
+	Mirror(memDC, 0, 1, false);
 	Rotate(memDC, DegToRad(-90), false);
 	Translate(memDC, -10 * SQUARE, -10 * SQUARE, false);
 
