@@ -54,11 +54,14 @@ CGDILP3View::CGDILP3View() noexcept
 	pieces[2][1].Load(CString("Bitmaps/download2.dib"));
 	pieces[2][2].Load(CString("Bitmaps/download7.dib"));
 
-	/*for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		for (int j = 0; j < 3; j++)
-			PaintItGrey(pieces[i][j]);
-	}*/
+			if (i == 1 && j == 0)
+				PaintItBlue(&pieces[i][j]);
+			else
+				PaintItGrey(&pieces[i][j]);
+	}
 
 	angle = 0;
 	xx = 2;
@@ -162,12 +165,13 @@ float CGDILP3View::DegToRad(float angle) { return angle * (2 * PI) / 360; }
 //=================================================================================================
 
 
-void CGDILP3View::PaintItGrey(DImage img)
+void CGDILP3View::PaintItGrey(DImage* img)
 {
-	DWORD sizeOfPicture = img.Width() * img.Height() * img.BPP();
-	unsigned char* bits =img.GetDIBBits();
+	unsigned char* bits = img->GetDIBBits();
+	DWORD sizeOfPicture = img->BPP() * img->Width() * img->Height();
 	int firstPixel[3];
-	for (DWORD ptr = 0; ptr < sizeOfPicture; ptr += img.BPP())
+
+	for (DWORD ptr = 0; ptr < sizeOfPicture; ptr += img->BPP())
 	{
 		int pixel = 0;
 		bool bg = true;
@@ -188,9 +192,37 @@ void CGDILP3View::PaintItGrey(DImage img)
 		for (int i = 0; i < 3 && !bg; i++)
 			bits[ptr + i] = pixel;
 	}
-	img.Update();
-		
+	img->Update();
+
 }
+
+
+void CGDILP3View::PaintItBlue(DImage* img) 
+{
+	unsigned char* bits = img->GetDIBBits();
+	DWORD imgSize = img->Width() * img->Height() * img->BPP();
+	int firstPixel[3];
+
+	for (DWORD ptr = 0; ptr < imgSize; ptr += img->BPP())
+	{
+		int pixel = 0;
+		bool bg = true;
+
+		for (int k = 0; k < 3; k++)
+		{
+			if (ptr == 0)
+				firstPixel[k] = bits[k];
+			else
+				bg = bg && (firstPixel[k] == bits[ptr + k]);
+		}
+
+		for (int i = 0; i < 3 && !bg; i++)
+			if (i != 0) bits[ptr + i] = 0;
+			
+	}
+	img->Update();
+}
+
 
 void CGDILP3View::DrawTransparent(CDC* pDC, DImage* img, int x, int y)
 {
@@ -279,7 +311,7 @@ void CGDILP3View::OnDraw(CDC* pDC)
 
 	//0.1
 
-	Translate(memDC, 103+6*SQUARE, 93, false);
+	Translate(memDC, 103 + 6 * SQUARE, 93, false);
 	Rotate(memDC, DegToRad(angle * ANGMOV + 17), false);
 	Translate(memDC, -(128), -(128), false);
 	DrawTransparent(memDC, &pieces[0][1], 0, 0);

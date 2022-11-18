@@ -32,7 +32,8 @@ public:
 	void Rotate(CDC* pDC, float angle, bool rightMultiply);
 	void Mirror(CDC* pDC, bool mx, bool my, bool rightMultiply);
 	float DegToRad(float angle);
-	void PaintItGrey(DImage img);
+	void PaintItGrey(DImage* img);
+	void PaintItBlue(DImage* img);
 	void DrawTransparent(CDC* pDC, DImage* img, int x, int y);
 	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
