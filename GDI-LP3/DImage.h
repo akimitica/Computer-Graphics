@@ -12,6 +12,7 @@ public:
 	bool	Load(CString fileName); // Ucitava sliku iz datoteke cije se ime navodi
 	bool	Save(CString fileName); // Upisuje sliku u datoteku cije se ime navodi
 	void	Draw(CDC* pDC, CRect rcImg, CRect rcDC); // Iscrtava sliku u datom DC-ju
+	void	DrawTransparent(CDC* pDC, CRect rcImg, CRect rcDC, COLORREF color); // Iscrtava sliku u datom DC-ju sa zadatom bojom kao providnom
 
 	int		Width(){return m_nWidth;}	// Sirina u pikselima
 	int		Height(){return m_nHeight;} // Visina u pikselima

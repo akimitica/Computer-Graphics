@@ -4777,3 +4777,49 @@ void DImage::Update()
 	delete m_pBuf;
 	m_pBuf = newBuf;
 }*/
+
+void DImage::DrawTransparent(CDC* pDC, CRect rcImg, CRect rcDC, COLORREF color)
+{
+    CBitmap bmpMask;
+    bmpMask.CreateBitmap(m_nWidth, m_nHeight, 1, 1, NULL);
+
+    CDC* SrcDC = new CDC();
+    SrcDC->CreateCompatibleDC(pDC);
+    CDC* DstDC = new CDC();
+    DstDC->CreateCompatibleDC(pDC);
+
+    CBitmap bmp;
+    bmp.CreateCompatibleBitmap(pDC, m_nWidth, m_nHeight);
+
+    CBitmap* pOldSrcBmp = SrcDC->SelectObject(&bmp);
+    Draw(SrcDC, CRect(0, 0, m_nWidth, m_nHeight), CRect(0, 0, m_nWidth, m_nHeight));
+    CBitmap* pOldDstBmp = DstDC->SelectObject(&bmpMask);
+
+    SrcDC->SetBkColor(color);
+
+    DstDC->BitBlt(0, 0, m_nWidth, m_nHeight, SrcDC, 0, 0, SRCCOPY);
+
+    COLORREF clrSaveDstText = SrcDC->SetTextColor(RGB(255, 255, 255));
+    SrcDC->SetBkColor(RGB(0, 0, 0));
+    SrcDC->BitBlt(0, 0, m_nWidth, m_nHeight, DstDC, 0, 0, SRCAND);
+
+    //-----
+    pDC->SetStretchBltMode(HALFTONE);
+    pDC->StretchBlt(rcDC.left, rcDC.top,
+        rcDC.Width(), rcDC.Height(),
+        DstDC, rcImg.left, rcImg.top,
+        rcImg.Width(), rcImg.Height(), SRCAND);
+    pDC->StretchBlt(rcDC.left, rcDC.top,
+        rcDC.Width(), rcDC.Height(),
+        SrcDC, rcImg.left, rcImg.top,
+        rcImg.Width(), rcImg.Height(), SRCPAINT);
+    //pDC->BitBlt(0, 0, m_nWidth, m_nHeigh, DstDC, 0, 0, SRCAND);
+    //pDC->BitBlt(0, 0, m_nWidth, m_nHeigh, SrcDC, 0, 0, SRCPAINT);
+
+    SrcDC->DeleteDC();
+    DstDC->DeleteDC();
+    delete SrcDC;
+    delete DstDC;
+    bmp.DeleteObject();
+    bmpMask.DeleteObject();
+}

@@ -4,7 +4,6 @@
 
 #pragma once
 #include "DImage.h"
-
 class CGDI2014CntrItem;
 
 class CGDI2014View : public CView
@@ -28,7 +27,7 @@ public:
 	float angle;
 	DImage* wheel;
 	HENHMETAFILE clio;
-	int gas;
+	float gas;
 
 // Operations
 public:
@@ -39,7 +38,7 @@ public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	void DrawGround(CDC* pDC, float angle);
 	void DrawCar(CDC* pDC, int x, int y, int w, int h);
-	void DrawWheel(CDC* pDC, int x, int y, int w, int h);
+	void DrawWheel(CDC* pDC, int x, int y, int w, float h);
 protected:
 	virtual void OnInitialUpdate(); // called first time after construct
 	XFORM Translate(CDC* pDC, float dX, float dY, bool rightMultiply);

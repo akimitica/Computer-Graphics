@@ -113,13 +113,20 @@ void CGDI2014View::DrawGround(CDC* pDC, float angle)
 
 void CGDI2014View::DrawCar(CDC* pDC, int x, int y, int w, int h)
 {
-
+	pDC->PlayMetaFile(clio, CRect(x + w / 2, y - h / 2, x - w / 2, y + h / 2));
 }
 
 
-void CGDI2014View::DrawWheel(CDC* pDC, int x, int y, int w, int h)
+void CGDI2014View::DrawWheel(CDC* pDC, int x, int y, int w, float h)
 {
+	XFORM oldForm = Translate(pDC, x, y, false);
+	Rotate(pDC, h, false);
 
+	int dX = 52, dY = 15, r = 376;
+	CRect srcRc(dX, dY, dX + r, dY + r);
+	CRect dstRc(-w, -w, w, w);
+	wheel->DrawTransparent(pDC, srcRc, dstRc, RGB(255, 255, 255));
+	pDC->SetWorldTransform(&oldForm);
 }
 
 
@@ -137,19 +144,28 @@ void CGDI2014View::OnDraw(CDC* pDC)
 
 
 
-	CRect rect;
-	GetClientRect(&rect);
+	CRect window;
+	GetClientRect(&window);
 	CDC* memDC = new CDC();
 	memDC->CreateCompatibleDC(pDC);
 	CBitmap img;
-	img.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height());
+	img.CreateCompatibleBitmap(pDC, window.Width(), window.Height());
 	memDC->SelectObject(img);
 
 	int oldMode = memDC->SetGraphicsMode(GM_ADVANCED);
 	DrawGround(memDC, angle);
+	double carWidth = 450.0, carHeight = 450 / 2.5, r = 38;
+	XFORM oldForm = Translate(memDC, carWidth / 2.0, -carHeight / 2.0 - r / 2.0, true);
+	Rotate(memDC, -DEGRAD * angle, true);
+	Translate(memDC, 0.0, window.Height(), true);
+	DrawCar(memDC, gas, 0, carWidth, carHeight);
 
+	float ang = gas / (2 * PI);
+	DrawWheel(memDC, gas - 155, 70, r, ang);
+	DrawWheel(memDC, gas + 135, 70, r, ang);
+	memDC->SetWorldTransform(&oldForm);
 	memDC->SetGraphicsMode(oldMode);
-	pDC->BitBlt(0, 0, rect.Width(), rect.Height(), memDC, 0, 0, SRCCOPY);
+	pDC->BitBlt(0, 0, window.Width(), window.Height(), memDC, 0, 0, SRCCOPY);
 	delete memDC;
 }
 
@@ -381,19 +397,24 @@ void CGDI2014View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 	switch (nChar) {
 	case VK_UP:
+		gas = 0;
 		if (angle < 80) angle += ANGMOV;
 		if (angle > 80) angle = 80;
 		Invalidate();
 		break;
 	case VK_DOWN:
+		gas = 0;
 		if (angle > -10) angle -= ANGMOV;
 		if (angle < -10) angle = -10;
 		Invalidate();
 		break;
 	case VK_LEFT:
+		if (gas>0.0) gas -= 10;
+		if (gas < 0.0) gas = 0.0;
 		Invalidate();
 		break;
 	case VK_RIGHT:
+		gas += 10;
 		Invalidate();
 		break;
 	default:
