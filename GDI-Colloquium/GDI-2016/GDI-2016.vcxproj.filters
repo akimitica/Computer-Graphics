@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GDI-2014.h">
+    <ClInclude Include="GDI-2016.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">
@@ -27,13 +27,10 @@
     <ClInclude Include="MainFrm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GDI-2014Doc.h">
+    <ClInclude Include="GDI-2016Doc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GDI-2014View.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CntrItem.h">
+    <ClInclude Include="GDI-2016View.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
@@ -47,19 +44,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GDI-2014.cpp">
+    <ClCompile Include="GDI-2016.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MainFrm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GDI-2014Doc.cpp">
+    <ClCompile Include="GDI-2016Doc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GDI-2014View.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CntrItem.cpp">
+    <ClCompile Include="GDI-2016View.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
@@ -70,20 +64,20 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="GDI2014.rc">
+    <ResourceCompile Include="GDI2016.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\GDI2014.rc2">
+    <None Include="res\GDI2016.rc2">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\GDI-2014Doc.ico">
+    <Image Include="res\GDI-2016Doc.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\GDI-2014.ico">
+    <Image Include="res\GDI-2016.ico">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\Toolbar.bmp">
