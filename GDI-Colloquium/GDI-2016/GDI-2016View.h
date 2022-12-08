@@ -18,9 +18,10 @@ public:
 
 protected:
 	DImage** table;
-	int ballDist, queueDist;
+	int ballDistX, ballDistY, x, y, queueDist;
+	int width, height;
+	CPoint start;
 	float angle;
-	CPoint ballPos;
 
 // Operations
 public:

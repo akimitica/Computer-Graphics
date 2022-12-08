@@ -376,10 +376,6 @@ void CGDILP3View::OnDraw(CDC* pDC)
 	memDC->SetWorldTransform(&oldForm);
 
 
-
-	
-
-
 	memDC->SetWorldTransform(&mainForm);
 	memDC->SetGraphicsMode(oldMode);
 	memDC->SelectClipRgn(&region);

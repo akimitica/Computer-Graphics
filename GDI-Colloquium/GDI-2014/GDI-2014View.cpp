@@ -114,6 +114,9 @@ void CGDI2014View::DrawGround(CDC* pDC, float angle)
 void CGDI2014View::DrawCar(CDC* pDC, int x, int y, int w, int h)
 {
 	pDC->PlayMetaFile(clio, CRect(x + w / 2, y - h / 2, x - w / 2, y + h / 2));
+	/*XFORM oldForm = Scale(pDC, -1, 1, false);
+	pDC->PlayMetaFile(clio, CRect(x - w / 2, y - h / 2, x + w / 2, y + h / 2));
+	pDC->SetWorldTransform(&oldForm);*/
 }
 
 
@@ -159,7 +162,6 @@ void CGDI2014View::OnDraw(CDC* pDC)
 	Rotate(memDC, -DEGRAD * angle, true);
 	Translate(memDC, 0.0, window.Height(), true);
 	DrawCar(memDC, gas, 0, carWidth, carHeight);
-
 	float ang = gas / (2 * PI);
 	DrawWheel(memDC, gas - 155, 70, r, ang);
 	DrawWheel(memDC, gas + 135, 70, r, ang);

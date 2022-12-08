@@ -19,6 +19,8 @@
 #endif
 
 #define MOV 10
+#define PI 3.1415926535897932384626433832795
+#define DEGRAD 0.01745329251994329576923690768489
 // CGDI2016View
 
 IMPLEMENT_DYNCREATE(CGDI2016View, CView)
@@ -45,10 +47,11 @@ CGDI2016View::CGDI2016View() noexcept
 	table[0]->Load(CString("res/wood.jpg"));
 	table[1]->Load(CString("res/felt2.jpg"));
 
-	ballDist = 0;
+	ballDistX = 0;
+	ballDistY = 0;
+	x = 1; y = 1;
 	queueDist = 100;
 	angle = 0;
-	ballPos = (600, 400);
 }
 
 CGDI2016View::~CGDI2016View()
@@ -86,7 +89,7 @@ XFORM CGDI2016View::Rotate(CDC* pDC, float angle, bool rightMul)
 {
 	XFORM oldForm;
 	pDC->GetWorldTransform(&oldForm);
-	XFORM form = { cos(angle), sin(angle), -sin(angle), cos(angle), 0, 0 };
+	XFORM form = { cos(DEGRAD * angle), sin(DEGRAD * angle), -sin(DEGRAD * angle), cos(DEGRAD * angle), 0, 0 };
 	pDC->ModifyWorldTransform(&form, rightMul ? MWT_RIGHTMULTIPLY : MWT_LEFTMULTIPLY);
 	return oldForm;
 }
@@ -102,17 +105,27 @@ void CGDI2016View::DrawStick(CDC* pDC, int w)
 	CPen* brown = new CPen(PS_SOLID, w / 100, RGB(139, 69, 19));
 	CPen* oldPen = pDC->SelectObject(ochre);
 
-	pDC->MoveTo(sin(angle) * queueDist, cos(angle) * queueDist);
-	pDC->LineTo(sin(angle) * (queueDist + 2 * w / 3), cos(angle) * (queueDist + 2 * w / 3);
+	pDC->MoveTo(-cos(DEGRAD * angle) * queueDist, sin(DEGRAD * angle) * queueDist);
+	pDC->LineTo(-cos(DEGRAD * angle) * (queueDist + 2 * w / 3), sin(DEGRAD * angle) * (queueDist + 2 * w / 3));
 	pDC->SelectObject(brown);
-	pDC->LineTo(sin(angle) * (queueDist + w), cos(angle) * (queueDist + w));
+	pDC->LineTo(-cos(DEGRAD * angle) * (queueDist + w), sin(DEGRAD * angle) * (queueDist + w));
 	pDC->SelectObject(oldPen);
 	delete ochre, brown;
 }
 
 void CGDI2016View::DrawBall(CDC* pDC, int w)
 {
+	CBrush* ball = new CBrush(RGB(128, 0, 32));;
+	CBrush* oldBrush = pDC->SelectObject(ball);
 
+	pDC->Ellipse(cos(angle*DEGRAD)*ballDistX - w / 2, -sin(angle * DEGRAD) * ballDistY - w / 2, cos(angle * DEGRAD) * ballDistX + w / 2, -sin(angle * DEGRAD) * ballDistY + w / 2);
+
+	CBrush* bela = new CBrush(RGB(255, 255, 255));
+	pDC->SelectObject(bela);
+	pDC->Ellipse(cos(angle * DEGRAD) * ballDistX - w / 5, -sin(angle * DEGRAD) * ballDistY - w / 2 + 3, cos(angle * DEGRAD) * ballDistX + w / 2 - 3, -sin(angle * DEGRAD) * ballDistY + w / 5);
+
+	pDC->SelectObject(oldBrush);
+	delete ball, bela;
 }
 
 void CGDI2016View::DrawTable(CDC* pDC, CRect rect)
@@ -128,6 +141,8 @@ void CGDI2016View::DrawBorder(CDC* pDC, CRect, int w)
 void CGDI2016View::DrawHoles(CDC* pDC, CRect rect, int size)
 {
 
+	pDC->Ellipse(-size / 2, -size / 2, size / 2, size / 2);
+
 }
 
 void CGDI2016View::OnDraw(CDC* pDC)
@@ -139,12 +154,26 @@ void CGDI2016View::OnDraw(CDC* pDC)
 
 	CRect window;
 	GetClientRect(&window);
-
+	width = window.Width();
+	height = window.Height();
+	start = (500, 500);
 	CDC* memDC = new CDC();
 
 	memDC->CreateCompatibleDC(pDC);
 	CBitmap img;
-	img.CreateCompatibleBitmap(memDC, window.Width(), window.Height());
+	img.CreateCompatibleBitmap(pDC, window.Width(), window.Height());
+	memDC->SelectObject(img);
+
+	int oldMode = memDC->SetGraphicsMode(GM_ADVANCED);
+	XFORM oldForm = Translate(memDC, start.x, 500, false);
+	DrawStick(memDC, 500);
+	DrawBall(memDC, 25);
+	Translate(memDC, -start.x, -500, false);
+	memDC->SetWorldTransform(&oldForm);
+
+	memDC->SetGraphicsMode(oldMode);
+	pDC->BitBlt(0, 0, window.Width(), window.Height(), memDC, 0, 0, SRCCOPY);
+	delete memDC;
 }
 
 
@@ -195,7 +224,7 @@ BOOL CGDI2016View::OnEraseBkgnd(CDC* pDC)
 {
 	// TODO: Add your message handler code here and/or call default
 
-	return CView::OnEraseBkgnd(pDC);
+	return TRUE /*CView::OnEraseBkgnd(pDC)*/;
 }
 
 
@@ -206,11 +235,13 @@ void CGDI2016View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	switch (nChar)
 	{
 	case VK_LEFT:
-		angle -= 10;
+		if (queueDist > 0)
+			angle += 1;
 		Invalidate();
 		break;
 	case VK_RIGHT:
-		angle += 10;
+		if (queueDist > 0)
+			angle -= 1;
 		Invalidate();
 		break;
 	case VK_UP:
@@ -218,25 +249,26 @@ void CGDI2016View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		{
 			queueDist -= 5;
 			if (queueDist < 0) queueDist = 0;
-			angle2 = angle;
 			Invalidate();
 		}
 		else
 		{
-			if (cos(angle) * ballDist == inBound())
-			{
-				angle2 = 180 - angle2;
-			}
-			if (sin(angle * ballDist) == bound)
-			{
-				angle2 = -angle2;
-			}
-			ballDist += 10;
+			ballDistX += x * 10;
+			ballDistY += y * 10;
+			if ((ballDistX * cos(angle * DEGRAD) > width - start.x) || (ballDistX * cos(angle * DEGRAD) < -start.x)) x = -x;
+			if ((ballDistY * sin(angle * DEGRAD) > 500 && sin(angle * DEGRAD) * y > 0) || (ballDistY * sin(angle * DEGRAD) < 500 - height && sin(angle * DEGRAD) * y < 0)) y = -y;
+			Invalidate();
+			break;
 		}
 
 		break;
 	case VK_DOWN:
-		ballDist = 0;
+		ballDistX = ballDistY = 0;
+		x = 1;
+		y = 1;
+		queueDist = 100;
+		Invalidate();
+		break;
 
 
 	}
