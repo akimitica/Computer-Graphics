@@ -111,8 +111,8 @@ void CGDI2018View::DrawImgTransparent(CDC* pDC, DImage* pImage)
 {
 	unsigned char* bits = pImage->GetDIBBits();
 	COLORREF bg = COLORREF(RGB(bits[2], bits[1], bits[0]));
-	CRect digga = CRect(0, 0, pImage->Width(), pImage->Height());
-	pImage->DrawTransparent(pDC, digga, digga, bg);
+	CRect rect = CRect(0, 0, pImage->Width(), pImage->Height());
+	pImage->DrawTransparent(pDC, rect, rect, bg);
 }
 
 void CGDI2018View::DrawArm1(CDC* pDC)
