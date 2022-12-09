@@ -130,19 +130,50 @@ void CGDI2016View::DrawBall(CDC* pDC, int w)
 
 void CGDI2016View::DrawTable(CDC* pDC, CRect rect)
 {
+	int sizeX = 1 + rect.Width() / table[1]->Width();
+	int sizeY = 1 + rect.Height() / table[1]->Height();
+
+
+	for (int i = 0; i < sizeX; i++) 
+	{
+		for (int j = 0; j < sizeY; j++) 
+		{
+			table[1]->Draw(pDC, CRect(0, 0, table[1]->Width(), table[1]->Height()), CRect(i * table[1]->Width(), j * table[1]->Height(), (i + 1) * table[1]->Width(), (j + 1) * table[1]->Height()));
+		}
+	}
 
 }
 
-void CGDI2016View::DrawBorder(CDC* pDC, CRect, int w)
+void CGDI2016View::DrawBorder(CDC* pDC, CRect rect, int w)
 {
+	CRgn r1, r2;
+	r1.CreateRectRgn(rect.left + w, rect.top + w, rect.right - w, rect.bottom - w);
+	r2.CreateRectRgn(rect.left, rect.top, rect.right, rect.bottom);
 
+	r1.CombineRgn(&r1, &r2, RGN_XOR);
+	pDC->SelectClipRgn(&r1);
+
+	table[0]->Draw(pDC, CRect(0, 0, table[0]->Width(), table[0]->Height()), rect);
+
+	pDC->SelectClipRgn(&r2);
 }
 
 void CGDI2016View::DrawHoles(CDC* pDC, CRect rect, int size)
 {
+	CBrush* oldbrush, * brush;
+	brush = new CBrush(RGB(0, 0, 0));
+	oldbrush = pDC->SelectObject(brush);
 
-	pDC->Ellipse(-size / 2, -size / 2, size / 2, size / 2);
+	pDC->Ellipse(rect.left + size, rect.top + size, rect.left + 2 * size, rect.top + 2 * size);
+	pDC->Ellipse(rect.Width() / 2 - size / 2, rect.top + size, rect.Width() / 2 + size / 2, rect.top + 2 * size);
+	pDC->Ellipse(rect.right - 2 * size, rect.top + size, rect.right - size, rect.top + 2 * size);
 
+	pDC->Ellipse(rect.left + size, rect.bottom - size, rect.left + 2 * size, rect.bottom - 2 * size);
+	pDC->Ellipse(rect.Width() / 2 - size / 2, rect.bottom - size, rect.Width() / 2 + size / 2, rect.bottom - 2 * size);
+	pDC->Ellipse(rect.right - 2 * size, rect.bottom - size, rect.right - size, rect.bottom - 2 * size);
+
+	pDC->SelectObject(oldbrush);
+	delete brush;
 }
 
 void CGDI2016View::OnDraw(CDC* pDC)
@@ -165,7 +196,12 @@ void CGDI2016View::OnDraw(CDC* pDC)
 	memDC->SelectObject(img);
 
 	int oldMode = memDC->SetGraphicsMode(GM_ADVANCED);
+	DrawTable(memDC, window);
+	DrawBorder(memDC, window, 40);
+	DrawHoles(memDC, window, 25);
 	XFORM oldForm = Translate(memDC, start.x, 500, false);
+
+	CRect border = CRect(10, 10, window.Width() - 10, window.Height() - 10);
 	DrawStick(memDC, 500);
 	DrawBall(memDC, 25);
 	Translate(memDC, -start.x, -500, false);
