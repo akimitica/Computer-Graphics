@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
-    <ProjectGuid>{A69682F2-40CA-449A-B099-6F521A2DA6E2}</ProjectGuid>
+    <ProjectGuid>{0AFFEACC-0523-480C-91C0-49EF0EA78852}</ProjectGuid>
     <Keyword>MFCProj</Keyword>
     <RootNamespace>OpenGLLP4</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
@@ -183,7 +183,9 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DImage.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GLRenderer.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OpenGL-LP4.h" />
     <ClInclude Include="OpenGL-LP4Doc.h" />
@@ -193,6 +195,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DImage.cpp" />
+    <ClCompile Include="GLRenderer.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OpenGL-LP4.cpp" />
     <ClCompile Include="OpenGL-LP4Doc.cpp" />

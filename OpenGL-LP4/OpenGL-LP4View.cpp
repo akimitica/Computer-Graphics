@@ -12,6 +12,8 @@
 
 #include "OpenGL-LP4Doc.h"
 #include "OpenGL-LP4View.h"
+#include "DImage.h"
+#include "GLRenderer.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -27,6 +29,10 @@ BEGIN_MESSAGE_MAP(COpenGLLP4View, CView)
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
+	ON_WM_CREATE()
+	ON_WM_ERASEBKGND()
+	ON_WM_SIZE()
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 // COpenGLLP4View construction/destruction
@@ -51,7 +57,7 @@ BOOL COpenGLLP4View::PreCreateWindow(CREATESTRUCT& cs)
 
 // COpenGLLP4View drawing
 
-void COpenGLLP4View::OnDraw(CDC* /*pDC*/)
+void COpenGLLP4View::OnDraw(CDC* pDC)
 {
 	COpenGLLP4Doc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
@@ -59,6 +65,8 @@ void COpenGLLP4View::OnDraw(CDC* /*pDC*/)
 		return;
 
 	// TODO: add draw code for native data here
+
+	glDC.DrawScene(pDC);
 }
 
 
@@ -103,3 +111,60 @@ COpenGLLP4Doc* COpenGLLP4View::GetDocument() const // non-debug version is inlin
 
 
 // COpenGLLP4View message handlers
+
+
+int COpenGLLP4View::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CView::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	// TODO:  Add your specialized creation code here
+	CDC* pDC = GetDC();
+	glDC.CreateGLContext(pDC);
+	ReleaseDC(pDC);
+
+	return 0;
+}
+
+
+BOOL COpenGLLP4View::OnEraseBkgnd(CDC* pDC)
+{
+	// TODO: Add your message handler code here and/or call default
+
+	return TRUE;
+	//return CView::OnEraseBkgnd(pDC);
+}
+
+
+void COpenGLLP4View::OnSize(UINT nType, int cx, int cy)
+{
+	CView::OnSize(nType, cx, cy);
+
+	// TODO: Add your message handler code here
+
+	CDC* pDC = GetDC();
+	glDC.Reshape(pDC, cx, cy);
+	ReleaseDC(pDC);
+}
+
+
+void COpenGLLP4View::OnDestroy()
+{
+	CView::OnDestroy();
+
+	// TODO: Add your message handler code here
+
+	CDC* pDC = GetDC();
+	glDC.DestroyScene(pDC);
+	ReleaseDC(pDC);
+}
+
+
+void COpenGLLP4View::OnInitialUpdate()
+{
+	CView::OnInitialUpdate();
+
+	CDC* pDC = GetDC();
+	glDC.PrepareScene(pDC);
+	ReleaseDC(pDC);
+}

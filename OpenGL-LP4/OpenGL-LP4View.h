@@ -3,7 +3,7 @@
 //
 
 #pragma once
-
+#include "GLRenderer.h"
 
 class COpenGLLP4View : public CView
 {
@@ -15,6 +15,8 @@ protected: // create from serialization only
 public:
 	COpenGLLP4Doc* GetDocument() const;
 
+protected:
+	CGLRenderer glDC;
 // Operations
 public:
 
@@ -40,6 +42,12 @@ protected:
 // Generated message map functions
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnDestroy();
+	void OnInitialUpdate();
 };
 
 #ifndef _DEBUG  // debug version in OpenGL-LP4View.cpp
