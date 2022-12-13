@@ -8,6 +8,7 @@
 // and search filter handlers and allows sharing of document code with that project.
 #ifndef SHARED_HANDLERS
 #include "OpenGL-LP4.h"
+#include <iostream>
 #endif
 
 #include "OpenGL-LP4Doc.h"
@@ -18,6 +19,8 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+#define PI 3.1415926535897932384626433832795
 
 
 // COpenGLLP4View
@@ -33,6 +36,10 @@ BEGIN_MESSAGE_MAP(COpenGLLP4View, CView)
 	ON_WM_ERASEBKGND()
 	ON_WM_SIZE()
 	ON_WM_DESTROY()
+	ON_WM_KEYDOWN()
+	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONUP()
+	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 // COpenGLLP4View construction/destruction
@@ -40,7 +47,7 @@ END_MESSAGE_MAP()
 COpenGLLP4View::COpenGLLP4View() noexcept
 {
 	// TODO: add construction code here
-
+	isClicked = false;
 }
 
 COpenGLLP4View::~COpenGLLP4View()
@@ -67,6 +74,7 @@ void COpenGLLP4View::OnDraw(CDC* pDC)
 	// TODO: add draw code for native data here
 
 	glDC.DrawScene(pDC);
+	
 }
 
 
@@ -129,10 +137,7 @@ int COpenGLLP4View::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 BOOL COpenGLLP4View::OnEraseBkgnd(CDC* pDC)
 {
-	// TODO: Add your message handler code here and/or call default
-
 	return TRUE;
-	//return CView::OnEraseBkgnd(pDC);
 }
 
 
@@ -152,8 +157,6 @@ void COpenGLLP4View::OnDestroy()
 {
 	CView::OnDestroy();
 
-	// TODO: Add your message handler code here
-
 	CDC* pDC = GetDC();
 	glDC.DestroyScene(pDC);
 	ReleaseDC(pDC);
@@ -167,4 +170,76 @@ void COpenGLLP4View::OnInitialUpdate()
 	CDC* pDC = GetDC();
 	glDC.PrepareScene(pDC);
 	ReleaseDC(pDC);
+}
+
+
+
+void COpenGLLP4View::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+	if (!isClicked)
+	{
+		isClicked = true;
+		oldPoint = point;
+	}
+	CView::OnLButtonDown(nFlags, point);
+}
+
+
+void COpenGLLP4View::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+	if (isClicked)
+		isClicked = false;
+	CView::OnLButtonUp(nFlags, point);
+}
+
+
+void COpenGLLP4View::OnMouseMove(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+	if (isClicked)
+	{
+		/*CPoint a = glDC.GetAngle();
+		float h_angle = a.x;
+		float v_angle = a.y;
+
+		int diff_x = oldPoint.x - point.x;
+		int diff_y = oldPoint.y - point.y;
+		oldPoint = point;
+
+		h_angle -= diff_x * 0.5;
+		v_angle += diff_y * 0.5;
+		v_angle = v_angle > 90 ? 90 : v_angle;
+		v_angle = v_angle < -90 ? -90 : v_angle;
+
+		glDC.SetAngle(h_angle, v_angle);*/
+
+		double moveX = point.x > oldPoint.x ? 1 : -1;
+		double moveY = point.y > oldPoint.y ? 1 : -1;
+		if (abs(point.x - oldPoint.x) > abs(point.y - oldPoint.y))
+			moveY /= 10;
+		else
+			moveX /= 10;
+		this->glDC.viewAngle[1] += moveX * PI / 180;
+		this->glDC.viewAngle[0] += moveY * PI / 180;
+		oldPoint = point;
+		Invalidate();
+	}
+	CView::OnMouseMove(nFlags, point);
+}
+
+void COpenGLLP4View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+	// TODO: Add your message handler code here and/or call default
+	switch (nChar)
+	{
+	case VK_LEFT:
+		glDC.angle_cx += 5;
+		break;
+	case VK_RIGHT:
+		glDC.angle_cx -= 5;
+	}
+	Invalidate();
+	CView::OnKeyDown(nChar, nRepCnt, nFlags);
 }

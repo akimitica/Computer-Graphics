@@ -17,6 +17,8 @@ public:
 
 protected:
 	CGLRenderer glDC;
+	bool isClicked;
+	CPoint oldPoint = { 0,0 };
 // Operations
 public:
 
@@ -47,7 +49,11 @@ public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnDestroy();
-	void OnInitialUpdate();
+	virtual void OnInitialUpdate();
+	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // debug version in OpenGL-LP4View.cpp
