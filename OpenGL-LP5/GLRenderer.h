@@ -44,9 +44,9 @@ public:
 	void AmbientLight();
 	void ViewPointLight();
 
-	void RedLight();
-	void MagentaLight();
-	void BlueLight();
+	void Light0();
+	void Light2();
+	void Light1();
 
 protected:
 	HGLRC	 m_hrc; //OpenGL Rendering Context 
@@ -61,7 +61,7 @@ public:
 	bool light1, light2, light0;
 	bool showNorm;
 	bool showAxis = true;
-	CGLMaterial magenta, turquoise;
+	CGLMaterial blue, turquoise;
 	CGLMaterial matBase;
 	CGLMaterial roomBase;
 	CGLMaterial magentaSphere;

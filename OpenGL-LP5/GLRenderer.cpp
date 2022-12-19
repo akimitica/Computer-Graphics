@@ -50,15 +50,17 @@ CGLRenderer::CGLRenderer()
 	light2 = true;
 	showNorm = true;
 
-	magenta.SetAmbient(0.2, 0.2, 0.2, 0.0);
-	magenta.SetDiffuse(1, 0, 1, 0.0);
-	magenta.SetSpecular(0.5, 0.5, 0.5, 0.0);
-	magenta.SetShininess(16.0);
+	blue.SetAmbient(0, 0, 0.2, 0.0);
+	blue.SetDiffuse(0, 0, 1, 0.0);
+	blue.SetSpecular(0, 0, 1, 0.0);
+	blue.SetEmission(0, 0, 0.25, 0);
+	blue.SetShininess(5.0);
 
-	turquoise.SetAmbient(0.2, 0.2, 0.2, 0.0);
+	turquoise.SetAmbient(0, 0.2, 0.2, 0.0);
 	turquoise.SetDiffuse(0, 1, 1, 0.0);
-	turquoise.SetSpecular(0.5, 0.5, 0.5, 0.0);
-	turquoise.SetShininess(16.0);
+	turquoise.SetSpecular(0, 1, 1, 0.0);
+	turquoise.SetEmission(0, 0.25, 0.25, 0);
+	turquoise.SetShininess(5.0);
 
 	matBase.SetAmbient(0.15, 0.15, 0.15, 0.0);
 	matBase.SetDiffuse(0.7, 0.7, 0.7, 0.0);
@@ -72,16 +74,16 @@ CGLRenderer::CGLRenderer()
 	roomBase.SetShininess(0.0);
 
 
-	magentaSphere.SetAmbient(0.2, 0.5, 0.2, 1);
-	magentaSphere.SetDiffuse(0.2, 0.9, 0.2, 1);
-	magentaSphere.SetSpecular(1, 0, 1, 1);
-	magentaSphere.SetEmission(1, 0, 1, 1);
+	magentaSphere.SetAmbient(0.8, 0.0, 0.0, 1);
+	magentaSphere.SetDiffuse(0.8, 0.0, 0.0, 1);
+	magentaSphere.SetSpecular(1, 0, 0, 1);
+	magentaSphere.SetEmission(1, 0, 0, 1);
 	magentaSphere.SetShininess(0);
 
 	blueSphere.SetAmbient(0.2, 0.2, 0.9, 1);
 	blueSphere.SetDiffuse(0.2, 0.2, 0.8, 1);
-	blueSphere.SetSpecular(0, 0, 1, 1);
-	blueSphere.SetEmission(0, 0, 1, 1);
+	blueSphere.SetSpecular(0, 1, 1, 1);
+	blueSphere.SetEmission(0, 1, 1, 1);
 	blueSphere.SetShininess(0);
 
 	redSphere.SetAmbient(0.8, 0.0, 0.0, 1);
@@ -163,9 +165,9 @@ void CGLRenderer::DrawScene(CDC *pDC)
 
 	glEnable(GL_LIGHTING);
 
-	RedLight();
-	MagentaLight();
-	BlueLight();
+	Light0();
+	Light2();
+	Light1();
 
 	glPushMatrix();
 
@@ -463,10 +465,10 @@ void CGLRenderer::DrawVase()
 	radius2 = 5;
 	float height = 1;
 	float pom;
-	bool color = true;
+	bool color = false;
 
 
-	int niz[14] = { -3, -3, -2, 0, 1, -1, -1, 3, -1, -3, -1, -1, -1, 3 };
+	int niz[14] = { -3, -3, -2, 0, 1, 3, -1, -1, -1, -1, -1, -3, -1, 3 };
 	for (int i = 0; i < 14; i++)
 	{
 		switch (niz[i])
@@ -498,7 +500,7 @@ void CGLRenderer::DrawVase()
 		if (color)
 			turquoise.Select();
 		else
-			magenta.Select();
+			blue.Select();
 		color = !color;
 		glTranslatef(0, step, 0);
 		DrawRing(radius1, radius2, height);
@@ -655,7 +657,7 @@ void CGLRenderer::ViewPointLight()
 
 }
 
-void CGLRenderer::RedLight()
+void CGLRenderer::Light0()
 {
 
 	float light_ambient[] = { 0.5, 0.0, 0.0, 1.0 };
@@ -680,7 +682,7 @@ void CGLRenderer::RedLight()
 	glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, 20);
 	//glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 7.0);
 
-	if (this->light0) {
+	if (light0) {
 		glPushMatrix();
 		redSphere.Select();
 		glTranslatef(18, 15, 0);
@@ -692,11 +694,11 @@ void CGLRenderer::RedLight()
 		glDisable(GL_LIGHT2);
 }
 
-void CGLRenderer::BlueLight()
+void CGLRenderer::Light1()
 {
-	float light_ambient[] = { 0.0, 0.0,0.75, 1.0 };
-	float light_diffuse[] = { 0.0, 0.0,0.75, 1.0 };
-	float light_specular[] = { 0, 0, 1.0, 1.0 };
+	float light_ambient[] = { 0.0, 0.75,0.75, 1.0 };
+	float light_diffuse[] = { 0.0, 0.75,0.75, 1.0 };
+	float light_specular[] = { 0, 1.0, 1.0, 1.0 };
 
 	GLfloat light_position[] = { 0, 40, 0, 1 };
 
@@ -717,7 +719,7 @@ void CGLRenderer::BlueLight()
 	glLightf(GL_LIGHT4, GL_SPOT_CUTOFF, 20);
 	//glLightf(GL_LIGHT4, GL_SPOT_EXPONENT, 7.0);
 
-	if (this->light2) {
+	if (light2) {
 		glPushMatrix();
 		blueSphere.Select();
 		glTranslatef(0, 38, 0);
@@ -729,22 +731,12 @@ void CGLRenderer::BlueLight()
 		glDisable(GL_LIGHT4);
 }
 
-void CGLRenderer::MagentaLight()
+void CGLRenderer::Light2()
 {
-	float light_ambient[] = { 0.2, 0, 0.2, 1.0 };
-	float light_diffuse[] = { 0.75, 0.0, 0.75, 1.0 };
-	float light_specular[] = { 1, 0, 1, 1.0 };
+	float light_ambient[] = { 0.5, 0.0, 0.0, 1.0 };
+	float light_diffuse[] = { 0.75,0.0, 0.0, 1.0 };
+	float light_specular[] = { 1.0, 0, 0, 1.0 };
 	GLfloat light_position[] = { -20, 15, 0, 1 };
-
-
-	/*
-	magentaSphere.SetAmbient(0.2, 0.5, 0.2, 1);
-	magentaSphere.SetDiffuse(0.2, 0.9, 0.2, 1);
-	magentaSphere.SetSpecular(1, 0, 1, 1);
-	magentaSphere.SetEmission(1, 0, 1, 1);
-	magentaSphere.SetShininess(0);
-	*/
-
 
 	//Boja i intenzitet svetlosti
 	glLightfv(GL_LIGHT3, GL_AMBIENT, light_ambient);
@@ -763,7 +755,7 @@ void CGLRenderer::MagentaLight()
 
 
 
-	if (this->light1) {
+	if (light1) {
 		glPushMatrix();
 		magentaSphere.Select();
 		glTranslatef(-18, 15, 0);
@@ -773,6 +765,4 @@ void CGLRenderer::MagentaLight()
 	}
 	else
 		glDisable(GL_LIGHT3);
-
-
 }
