@@ -22,6 +22,7 @@ public:
 	void DrawAxis();
 	void DrawFigure(double angle);
 	void DrawBranch(double angle = 0 , bool isCone = false);
+	void Zoom(bool out);
 
 
 protected:

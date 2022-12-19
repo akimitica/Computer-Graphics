@@ -40,6 +40,7 @@ BEGIN_MESSAGE_MAP(COpenGLLP4View, CView)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
 	ON_WM_MOUSEMOVE()
+	ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 // COpenGLLP4View construction/destruction
@@ -177,11 +178,8 @@ void COpenGLLP4View::OnInitialUpdate()
 void COpenGLLP4View::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
-	if (!isClicked)
-	{
-		isClicked = true;
-		oldPoint = point;
-	}
+	isClicked = true;
+	oldPoint = point;
 	CView::OnLButtonDown(nFlags, point);
 }
 
@@ -189,8 +187,7 @@ void COpenGLLP4View::OnLButtonDown(UINT nFlags, CPoint point)
 void COpenGLLP4View::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
-	if (isClicked)
-		isClicked = false;
+	isClicked = false;
 	CView::OnLButtonUp(nFlags, point);
 }
 
@@ -221,8 +218,8 @@ void COpenGLLP4View::OnMouseMove(UINT nFlags, CPoint point)
 			moveY /= 10;
 		else
 			moveX /= 10;
-		this->glDC.viewAngle[1] += moveX * PI / 180;
-		this->glDC.viewAngle[0] += moveY * PI / 180;
+		glDC.viewAngle[1] += moveX * PI / 180;
+		glDC.viewAngle[0] += moveY * PI / 180;
 		oldPoint = point;
 		Invalidate();
 	}
@@ -239,7 +236,24 @@ void COpenGLLP4View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		break;
 	case VK_RIGHT:
 		glDC.angle_cx -= 5;
+		break;
+	case 'A' :
+		glDC.showAxis = !glDC.showAxis;
+		break;
+	case 'G':
+		glDC.showGrid = !glDC.showGrid;
+		break;
 	}
 	Invalidate();
 	CView::OnKeyDown(nChar, nRepCnt, nFlags);
+}
+
+
+BOOL COpenGLLP4View::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	// TODO: Add your message handler code here and/or call default
+
+	glDC.Zoom(zDelta < 0);
+	Invalidate();
+	return CView::OnMouseWheel(nFlags, zDelta, pt);
 }

@@ -23,7 +23,7 @@ void CGLRenderer::CalculatePosition()
 
 CGLRenderer::CGLRenderer()
 {
-	this->m_hrc = NULL;
+	m_hrc = NULL;
 	viewR = 15;
 	viewAngle[0] = PI * 30 / 180;
 	viewAngle[1] = PI * 45 / 180;
@@ -86,10 +86,12 @@ void CGLRenderer::DrawScene(CDC *pDC)
 	glEnable(GL_DEPTH_TEST);
 	glLoadIdentity();
 
-	gluLookAt(this->viewPosition[0], this->viewPosition[1], this->viewPosition[2], this->lookingAt[0], this->lookingAt[1], this->lookingAt[2], this->upVector[0], this->upVector[1], this->upVector[2]);
+	gluLookAt(viewPosition[0], viewPosition[1], viewPosition[2],
+		lookingAt[0], lookingAt[1], lookingAt[2],
+		upVector[0], upVector[1], upVector[2]);
 
-	DrawAxis();
-	DrawGrid(10, 10, 10, 10);
+	if (showAxis) DrawAxis();
+	if (showGrid) DrawGrid(10, 10, 10, 10);
 	DrawFigure(angle_cx);
 	
 	
@@ -241,46 +243,52 @@ void CGLRenderer::DrawFigure(double angle)
 
 	glPushMatrix();
 
-	glColor3f(0, 1, 0);
+	glColor3f(0.47, 0, 0);
 	DrawBranch(0, false);
 	{
 		//levo dete
 		glPushMatrix();
-		glColor3f(0, 1, 0);
+		glColor3f(0.47, 0, 0);
 		DrawBranch(45, false);
-		glColor3f(0, 1, 0);
-		DrawBranch(0, true);
-		glPopMatrix();
-		//srednje dete
-		glPushMatrix();
-		glColor3f(0, 1, 0);
-		DrawBranch(0, false);
 		{
 			glPushMatrix();
 			glColor3f(1, 1, 0);
 			DrawBranch(45 + angle, false);
-			glColor3f(0, 1, 0);
+			glColor3f(0.47, 0, 0);
 			DrawBranch(0, true);
 			glPopMatrix();
 		}
 		{
 			glPushMatrix();
-			glColor3f(0, 1, 0);
+			glColor3f(0.47, 0, 0);
 			DrawBranch(-45, false);
-			glColor3f(0, 1, 0);
+			{
+				glPushMatrix();
+				glColor3f(0.47, 0, 0);
+				DrawBranch(90, true);
+				glPopMatrix();
+			}
+			glColor3f(0.47, 0, 0);
 			DrawBranch(0, false);
 			glPopMatrix();
 		}
 		glPopMatrix();
+		//srednje dete
+		glPushMatrix();
+		glColor3f(0.47, 0, 0);
+		DrawBranch(0, false);
 		{
 			glPushMatrix();
-			glColor3f(0, 1, 0);
-			DrawBranch(-45, false);
-			glColor3f(0, 1, 0);
-			DrawBranch(0, true);
-			glColor3f(0, 1, 0);
-			DrawBranch(0, true);
+			glColor3f(0.47, 0, 0);
+			DrawBranch(45, true);
 			glPopMatrix();
+			glColor3f(0.47, 0, 0);
+			DrawBranch(-45, true);
+		}
+		glPopMatrix();
+		{
+			glColor3f(0.47, 0, 0);
+			DrawBranch(-45,true);
 		}
 		
 	}
@@ -301,7 +309,19 @@ void CGLRenderer::DrawBranch(double angle, bool isCone)
 		DrawCylinder(1, 0.3, 0.3, 6);
 	}
 	glTranslatef(0, 1, 0);
-	glColor3f(0, 0.5, 0);
+	glColor3f(0, 0.8, 0);
 	DrawSphere(0.2, 15, 15);
 	glTranslatef(0, 0.2, 0);
+}
+
+void CGLRenderer::Zoom(bool out)
+{
+	viewR += out ? 1 : -1;
+
+	double dwXY = PI * viewAngle[0] / 180;
+	double dwXZ = PI * viewAngle[1] / 180;
+
+	this->viewPosition[0] = this->viewR * cos(dwXY) * cos(dwXZ);
+	this->viewPosition[1] = this->viewR * sin(dwXY);
+	this->viewPosition[2] = this->viewR * cos(dwXY) * sin(dwXZ);
 }

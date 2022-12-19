@@ -1,19 +1,20 @@
 
-// OpenGL-LP4View.h : interface of the COpenGLLP4View class
+// OpenGL-LP5View.h : interface of the COpenGLLP5View class
 //
 
 #pragma once
 #include "GLRenderer.h"
 
-class COpenGLLP4View : public CView
+
+class COpenGLLP5View : public CView
 {
 protected: // create from serialization only
-	COpenGLLP4View() noexcept;
-	DECLARE_DYNCREATE(COpenGLLP4View)
+	COpenGLLP5View() noexcept;
+	DECLARE_DYNCREATE(COpenGLLP5View)
 
 // Attributes
 public:
-	COpenGLLP4Doc* GetDocument() const;
+	COpenGLLP5Doc* GetDocument() const;
 
 protected:
 	CGLRenderer glDC;
@@ -33,7 +34,7 @@ protected:
 
 // Implementation
 public:
-	virtual ~COpenGLLP4View();
+	virtual ~COpenGLLP5View();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
@@ -47,18 +48,18 @@ protected:
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnDestroy();
-	virtual void OnInitialUpdate();
+	void OnInitialUpdate();
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };
 
-#ifndef _DEBUG  // debug version in OpenGL-LP4View.cpp
-inline COpenGLLP4Doc* COpenGLLP4View::GetDocument() const
-   { return reinterpret_cast<COpenGLLP4Doc*>(m_pDocument); }
+#ifndef _DEBUG  // debug version in OpenGL-LP5View.cpp
+inline COpenGLLP5Doc* COpenGLLP5View::GetDocument() const
+   { return reinterpret_cast<COpenGLLP5Doc*>(m_pDocument); }
 #endif
 
