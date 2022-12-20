@@ -52,13 +52,13 @@ CGLRenderer::CGLRenderer()
 
 	blue.SetAmbient(0, 0, 0.2, 0.0);
 	blue.SetDiffuse(0, 0, 1, 0.0);
-	blue.SetSpecular(0, 0, 1, 0.0);
+	blue.SetSpecular(0.5, 0.5, 0.5, 0.0);
 	blue.SetEmission(0, 0, 0.25, 0);
 	blue.SetShininess(5.0);
 
 	turquoise.SetAmbient(0, 0.2, 0.2, 0.0);
 	turquoise.SetDiffuse(0, 1, 1, 0.0);
-	turquoise.SetSpecular(0, 1, 1, 0.0);
+	turquoise.SetSpecular(0.5, 0.5, 0.5, 0.0);
 	turquoise.SetEmission(0, 0.25, 0.25, 0);
 	turquoise.SetShininess(5.0);
 
@@ -173,7 +173,7 @@ void CGLRenderer::DrawScene(CDC *pDC)
 
 	roomBase.Select();
 	DrawRoom();
-	//glScalef(1.5, 1.5, 1.5);
+	glScalef(1.5, 1.5, 1.5);
 	matBase.Select();
 	DrawStand();
 
