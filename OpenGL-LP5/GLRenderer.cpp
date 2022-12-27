@@ -166,8 +166,8 @@ void CGLRenderer::DrawScene(CDC *pDC)
 	glEnable(GL_LIGHTING);
 
 	Light0();
-	Light2();
 	Light1();
+	Light2();
 
 	glPushMatrix();
 
@@ -733,8 +733,8 @@ void CGLRenderer::Light1()
 
 void CGLRenderer::Light2()
 {
-	float light_ambient[] = { 0.5, 0.0, 0.0, 1.0 };
-	float light_diffuse[] = { 0.75,0.0, 0.0, 1.0 };
+	float light_ambient[] = { 0.75, 0, 0.0, 1.0 };
+	float light_diffuse[] = { 0.75, 0, 0.0, 1.0 };
 	float light_specular[] = { 1.0, 0, 0, 1.0 };
 	GLfloat light_position[] = { -20, 15, 0, 1 };
 
