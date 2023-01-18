@@ -56,7 +56,7 @@ void CGLRenderer::PrepareScene(CDC* pDC)
 {
 	wglMakeCurrent(pDC->m_hDC, m_hrc);
 
-	glClearColor(1.0, 1.0, 1.0, 0.0);
+	glClearColor(.8, .8, .8, 0.0);
 	groundTexture = LoadTexture("ground.jpg");
 	texture = LoadTexture("texture.png");
 
@@ -98,10 +98,10 @@ void CGLRenderer::DrawScene(CDC* pDC)
 
 	SetEyePosition(); 
 
+	DrawAxis(10);
 	GLfloat lmodel_ambient[] = { 0.9, 0.9, 0.9, 1.0 };
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
 	ViewPointLight();
-	DrawAxis(10);
 	glEnable(GL_LIGHTING);
 
 	DrawGround();
@@ -196,26 +196,26 @@ void CGLRenderer::DrawTruckSide()
 	//Kabina
 	glBegin(GL_POLYGON);
 	{
-		glTexCoord2f(0, 5 * SQUARE);
+		glTexCoord2f(0, 4 * SQUARE);
 		glVertex3f(0, 2, 0);
 
 		glTexCoord2f(0, 2 * SQUARE);
-		glVertex3f(0, 5, 0);
+		glVertex3f(0, 4, 0);
 
 		glTexCoord2f(2 * SQUARE, 0);
-		glVertex3f(2, 7, 0);
+		glVertex3f(2, 6, 0);
 
 		glTexCoord2f(4 * SQUARE, 0);
-		glVertex3f(4, 7, 0);
+		glVertex3f(4, 6, 0);
 
-		glTexCoord2f(4 * SQUARE, 4 * SQUARE);
+		glTexCoord2f(4 * SQUARE, 3 * SQUARE);
 		glVertex3f(4, 3, 0);
 
-		glTexCoord2f(13 * SQUARE, 4 * SQUARE);
-		glVertex3f(13, 3, 0);
+		glTexCoord2f(12 * SQUARE, 3 * SQUARE);
+		glVertex3f(12, 3, 0);
 
-		glTexCoord2f(13 * SQUARE, 5 * SQUARE);
-		glVertex3f(13, 2, 0);
+		glTexCoord2f(12 * SQUARE, 4 * SQUARE);
+		glVertex3f(12, 2, 0);
 	}
 	glEnd();
 
@@ -223,38 +223,38 @@ void CGLRenderer::DrawTruckSide()
 	{
 		glBegin(GL_POLYGON);
 		{
-			glTexCoord2f(0, 7 * SQUARE);
+			glTexCoord2f(0, 6 * SQUARE);
 			glVertex3f(0, 0, 0);
 
-			glTexCoord2f(1 * SQUARE, 7 * SQUARE);
+			glTexCoord2f(1 * SQUARE, 6 * SQUARE);
 			glVertex3f(1, 0, 0);
 
-			glTexCoord2f(1 * SQUARE, 6 * SQUARE);
+			glTexCoord2f(1 * SQUARE, 5 * SQUARE);
 			glVertex3f(1, 1, 0);
 
-			glTexCoord2f(2 * SQUARE, 5 * SQUARE);
+			glTexCoord2f(2 * SQUARE, 4 * SQUARE);
 			glVertex3f(2, 2, 0);
 
-			glTexCoord2f(0, 5 * SQUARE);
+			glTexCoord2f(0, 4 * SQUARE);
 			glVertex3f(0, 2, 0);
 		}
 		glEnd();
 
 		glBegin(GL_POLYGON);
 		{
-			glTexCoord2f(5 * SQUARE, 7 * SQUARE);
+			glTexCoord2f(5 * SQUARE, 6 * SQUARE);
 			glVertex3f(5, 0, 0);
 
-			glTexCoord2f(4 * SQUARE, 7 * SQUARE);
+			glTexCoord2f(4 * SQUARE, 6 * SQUARE);
 			glVertex3f(4, 0, 0);
 
-			glTexCoord2f(4 * SQUARE, 6 * SQUARE);
+			glTexCoord2f(4 * SQUARE, 5 * SQUARE);
 			glVertex3f(4, 1, 0);
 
-			glTexCoord2f(3 * SQUARE, 5 * SQUARE);
+			glTexCoord2f(3 * SQUARE, 4 * SQUARE);
 			glVertex3f(3, 2, 0);
 
-			glTexCoord2f(5 * SQUARE, 5 * SQUARE);
+			glTexCoord2f(5 * SQUARE, 4 * SQUARE);
 			glVertex3f(5, 2, 0);
 		}
 		glEnd();
@@ -264,38 +264,38 @@ void CGLRenderer::DrawTruckSide()
 	{
 		glBegin(GL_POLYGON);
 		{
-			glTexCoord2f(5 * SQUARE, 7 * SQUARE);
+			glTexCoord2f(5 * SQUARE, 6 * SQUARE);
 			glVertex3f(5, 0, 0);
 
-			glTexCoord2f(6 * SQUARE, 7 * SQUARE);
+			glTexCoord2f(6 * SQUARE, 6 * SQUARE);
 			glVertex3f(6, 0, 0);
 
-			glTexCoord2f(6 * SQUARE, 6 * SQUARE);
+			glTexCoord2f(6 * SQUARE, 5 * SQUARE);
 			glVertex3f(6, 1, 0);
 
-			glTexCoord2f(7 * SQUARE, 5 * SQUARE);
+			glTexCoord2f(7 * SQUARE, 4 * SQUARE);
 			glVertex3f(7, 2, 0);
 
-			glTexCoord2f(5 * SQUARE, 5 * SQUARE);
+			glTexCoord2f(5 * SQUARE, 4 * SQUARE);
 			glVertex3f(5, 2, 0);
 		}
 		glEnd();
 
 		glBegin(GL_POLYGON);
 		{
-			glTexCoord2f(10 * SQUARE, 7 * SQUARE);
+			glTexCoord2f(10 * SQUARE, 6 * SQUARE);
 			glVertex3f(10, 0, 0);
 
-			glTexCoord2f(9 * SQUARE, 7 * SQUARE);
+			glTexCoord2f(9 * SQUARE, 6 * SQUARE);
 			glVertex3f(9, 0, 0);
 
-			glTexCoord2f(9 * SQUARE, 6 * SQUARE);
+			glTexCoord2f(9 * SQUARE, 5 * SQUARE);
 			glVertex3f(9, 1, 0);
 
-			glTexCoord2f(8 * SQUARE, 5 * SQUARE);
+			glTexCoord2f(8 * SQUARE, 4 * SQUARE);
 			glVertex3f(8, 2, 0);
 
-			glTexCoord2f(10 * SQUARE, 5 * SQUARE);
+			glTexCoord2f(10 * SQUARE, 4 * SQUARE);
 			glVertex3f(10, 2, 0);
 		}
 		glEnd();
@@ -304,16 +304,16 @@ void CGLRenderer::DrawTruckSide()
 	//Ostatak
 	glBegin(GL_POLYGON);
 	{
-		glTexCoord2f(10 * SQUARE, 7 * SQUARE);
+		glTexCoord2f(10 * SQUARE, 6 * SQUARE);
 		glVertex3f(10, 0, 0);
 
-		glTexCoord2f(13 * SQUARE, 7 * SQUARE);
-		glVertex3f(13, 0, 0);
+		glTexCoord2f(12 * SQUARE, 6 * SQUARE);
+		glVertex3f(12, 0, 0);
 
-		glTexCoord2f(13 * SQUARE, 5 * SQUARE);
-		glVertex3f(13, 2, 0);
+		glTexCoord2f(12 * SQUARE, 4 * SQUARE);
+		glVertex3f(12, 2, 0);
 
-		glTexCoord2f(10 * SQUARE, 5 * SQUARE);
+		glTexCoord2f(10 * SQUARE, 4 * SQUARE);
 		glVertex3f(10, 2, 0);
 	}
 	glEnd();
@@ -327,38 +327,38 @@ void CGLRenderer::DrawTruckCover()
 	{
 		glNormal3b(-1, 0, 0);
 		glVertex3d(-6.5, 0, -2.5);
-		glVertex3d(-6.5, 5, -2.5);
+		glVertex3d(-6.5, 4, -2.5);
 		glVertex3d(-6.5, 0, 2.5);
-		glVertex3d(-6.5, 5, 2.5);
+		glVertex3d(-6.5, 4, 2.5);
 	}
 	glEnd();
 	glBegin(GL_QUADS);
 	{
 		glNormal3d(-cos(PI / 4), sin(PI / 4), 0);
-		glVertex3d(-6.5, 5, -2.5);
-		glVertex3d(-4.5, 7, -2.5);
-		glVertex3d(-4.5, 7, 2.5);
-		glVertex3d(-6.5, 5, 2.5);
+		glVertex3d(-6.5, 4, -2.5);
+		glVertex3d(-4.5, 6, -2.5);
+		glVertex3d(-4.5, 6, 2.5);
+		glVertex3d(-6.5, 4, 2.5);
 	}
 	glEnd();
 
 	glBegin(GL_QUADS);
 	{
 		glNormal3d(0, 1, 0);
-		glVertex3d(-4.5, 7, -2.5);
-		glVertex3d(-2.5, 7, -2.5);
-		glVertex3d(-2.5, 7, 2.5);
-		glVertex3d(-4.5, 7, 2.5);
+		glVertex3d(-4.5, 6, -2.5);
+		glVertex3d(-2.5, 6, -2.5);
+		glVertex3d(-2.5, 6, 2.5);
+		glVertex3d(-4.5, 6, 2.5);
 	}
 	glEnd();
 
 	glBegin(GL_QUADS);
 	{
 		glNormal3d(1, 0, 0);
-		glVertex3d(-2.5, 7, -2.5);
+		glVertex3d(-2.5, 6, -2.5);
 		glVertex3d(-2.5, 3, -2.5);
 		glVertex3d(-2.5, 3, 2.5);
-		glVertex3d(-2.5, 7, 2.5);
+		glVertex3d(-2.5, 6, 2.5);
 	}
 	glEnd();
 
@@ -366,8 +366,8 @@ void CGLRenderer::DrawTruckCover()
 	{
 		glNormal3d(0, 1, 0);
 		glVertex3d(-2.5, 3, -2.5);
-		glVertex3d(6.5, 3, -2.5);
-		glVertex3d(6.5, 3, 2.5);
+		glVertex3d(5.5, 3, -2.5);
+		glVertex3d(5.5, 3, 2.5);
 		glVertex3d(-2.5, 3, 2.5);
 	}
 	glEnd();
@@ -375,20 +375,20 @@ void CGLRenderer::DrawTruckCover()
 	glBegin(GL_QUADS);
 	{
 		glNormal3d(1, 0, 0);
-		glVertex3d(6.5, 3, -2.5);
-		glVertex3d(6.5, 0, -2.5);
-		glVertex3d(6.5, 0, 2.5);
-		glVertex3d(6.5, 3, 2.5);
+		glVertex3d(5.5, 3, -2.5);
+		glVertex3d(5.5, 0, -2.5);
+		glVertex3d(5.5, 0, 2.5);
+		glVertex3d(5.5, 3, 2.5);
 	}
 	glEnd();
 
 	glBegin(GL_QUADS);
 	{
 		glNormal3d(0, -1, 0);
-		glVertex3d(6.5, 0, -2.5);
+		glVertex3d(5.5, 0, -2.5);
 		glVertex3d(2.5, 0, -2.5);
 		glVertex3d(2.5, 0, 2.5);
-		glVertex3d(6.5, 0, 2.5);
+		glVertex3d(5.5, 0, 2.5);
 	}
 	glEnd();
 	glBegin(GL_QUADS);
@@ -518,7 +518,7 @@ void CGLRenderer::DrawWheel(float tX, float tY, float tZ, float rotAngle)
 	float alpha = 2 * PI / nSeg;
 	float x, z;
 	
-	glColor3f(.82, .82, .7);
+	glColor3f(1, 1, 1);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -532,7 +532,7 @@ void CGLRenderer::DrawWheel(float tX, float tY, float tZ, float rotAngle)
 	for (int i = 0; i < nSeg; i++) {
 		x = r * cos(alpha * i);
 		z = r * sin(alpha * i);
-		glTexCoord2f((x + 6) * SQUARE, (z + 1.5) * SQUARE);
+		glTexCoord2f((x + 10) * SQUARE, (z + 1.5) * SQUARE);
 		glVertex3f(x, 0, z);
 	}
 	glEnd();
@@ -544,7 +544,7 @@ void CGLRenderer::DrawWheel(float tX, float tY, float tZ, float rotAngle)
 	for (int i = 0; i < nSeg; i++) {
 		x = r * cos(alpha * i);
 		z = r * sin(alpha * i);
-		glTexCoord2f((x + 6) * SQUARE, (z + 1.5) * SQUARE);
+		glTexCoord2f((x + 10) * SQUARE, (z + 1.5) * SQUARE);
 		glVertex3f(x, h, z);
 	}
 	glEnd();
@@ -552,6 +552,7 @@ void CGLRenderer::DrawWheel(float tX, float tY, float tZ, float rotAngle)
 
 	glDisable(GL_TEXTURE_2D);
 
+	glColor3f(.82, .82, .7);
 	glBegin(GL_QUAD_STRIP);
 	for (int i = 0; i < nSeg + 1; i++) {
 		x = r * cos(alpha * i);
