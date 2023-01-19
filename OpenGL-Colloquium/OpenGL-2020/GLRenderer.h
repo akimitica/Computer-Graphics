@@ -30,6 +30,12 @@ public:
 
 	void SetEyePosition();
 
+	void DrawCone(int n, double r, double h);
+
+	void DrawSphere(double r, int segA, int segB);
+
+	void Zoom(bool out);
+
 protected:
 	HGLRC	 m_hrc; //OpenGL Rendering Context 
 	UINT spider, env[6];

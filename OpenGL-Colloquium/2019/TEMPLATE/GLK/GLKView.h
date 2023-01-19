@@ -1,25 +1,25 @@
 
-// OpenGL-2020View.h : interface of the COpenGL2020View class
+// GLKView.h : interface of the CGLKView class
 //
 
 #pragma once
+
 #include "GLRenderer.h"
 
-
-class COpenGL2020View : public CView
+class CGLKView : public CView
 {
 protected: // create from serialization only
-	COpenGL2020View() noexcept;
-	DECLARE_DYNCREATE(COpenGL2020View)
+	CGLKView();
+	DECLARE_DYNCREATE(CGLKView)
 
 // Attributes
 public:
-	COpenGL2020Doc* GetDocument() const;
+	CGLKDoc* GetDocument() const;
 
 protected:
-	CGLRenderer glDC;
-	POINT mousePos;
-
+	CGLRenderer m_glRenderer;
+	bool is_clicked;
+	CPoint old_point;
 // Operations
 public:
 
@@ -34,7 +34,7 @@ protected:
 
 // Implementation
 public:
-	virtual ~COpenGL2020View();
+	virtual ~CGLKView();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
@@ -46,19 +46,18 @@ protected:
 protected:
 	DECLARE_MESSAGE_MAP()
 public:
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnDestroy();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	void OnInitialUpdate();
-	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	afx_msg void OnMouseHWheel(UINT nFlags, short zDelta, CPoint pt);
+	virtual void OnInitialUpdate();
+
+	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };
 
-#ifndef _DEBUG  // debug version in OpenGL-2020View.cpp
-inline COpenGL2020Doc* COpenGL2020View::GetDocument() const
-   { return reinterpret_cast<COpenGL2020Doc*>(m_pDocument); }
+#ifndef _DEBUG  // debug version in GLKView.cpp
+inline CGLKDoc* CGLKView::GetDocument() const
+   { return reinterpret_cast<CGLKDoc*>(m_pDocument); }
 #endif
 

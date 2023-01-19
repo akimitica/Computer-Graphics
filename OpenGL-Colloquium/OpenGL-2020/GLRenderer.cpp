@@ -85,6 +85,8 @@ void CGLRenderer::DrawScene(CDC *pDC)
 	DrawEnvCube(100);
 	glPopMatrix();
 
+	glColor3f(.6, .6, .6);
+	DrawSphere(2, 32, 32);
 
 	glFlush();
 	SwapBuffers(pDC->m_hDC);
@@ -159,7 +161,7 @@ UINT CGLRenderer::LoadTexture(char* fileName)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, img.Width(), img.Height(), GL_RGBA, GL_UNSIGNED_BYTE, img.GetDIBBits());
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, img.Width(), img.Height(), GL_BGRA_EXT, GL_UNSIGNED_BYTE, img.GetDIBBits());
 
 	return texId;
 }
@@ -202,7 +204,7 @@ void CGLRenderer::DrawEnvCube(double a)
 	glEnd();
 
 
-	glBindTexture(GL_TEXTURE_2D, env[2]);
+	glBindTexture(GL_TEXTURE_2D, env[3]);
 	glBegin(GL_QUADS);
 	{
 		glColor3f(1, 1, 1);
@@ -217,7 +219,7 @@ void CGLRenderer::DrawEnvCube(double a)
 	}
 	glEnd();
 
-	glBindTexture(GL_TEXTURE_2D, env[2]);
+	/*glBindTexture(GL_TEXTURE_2D, env[2]);
 	glBegin(GL_QUADS);
 	{
 		glColor3f(1, 1, 1);
@@ -233,7 +235,7 @@ void CGLRenderer::DrawEnvCube(double a)
 	glEnd();
 
 
-	glBindTexture(GL_TEXTURE_2D, env[2]);
+	glBindTexture(GL_TEXTURE_2D, env[4]);
 	glBegin(GL_QUADS);
 	{
 		glColor3f(1, 1, 1);
@@ -246,11 +248,11 @@ void CGLRenderer::DrawEnvCube(double a)
 		glTexCoord2f(1, 0);
 		glVertex3f(a / 2, a / 2, a / 2);
 	}
-	glEnd();
+	glEnd();*/
 
 	//============== F L O O R ======================
 
-	glBindTexture(GL_TEXTURE_2D, env[5]);
+	/*glBindTexture(GL_TEXTURE_2D, env[5]);
 	glBegin(GL_QUADS);
 	{
 		glColor3f(1, 1, 1);
@@ -263,7 +265,7 @@ void CGLRenderer::DrawEnvCube(double a)
 		glTexCoord2f(1, 0);
 		glVertex3f(a / 2, -a / 2, -a / 2);
 	}
-	glEnd();
+	glEnd();*/
 }
 
 
@@ -276,4 +278,66 @@ void CGLRenderer::SetEyePosition()
 	upVectorY = cos(viewAngle[0]) < 0 ? -1 : 1;
 
 	gluLookAt(eyePosition[0], eyePosition[1], eyePosition[2], 0, lookingAtY, 0, 0, upVectorY, 0);
+}
+
+
+void CGLRenderer::DrawCone(int n, double r, double h)
+{
+	double angleStep = 2 * PI / n;
+	glBegin(GL_TRIANGLE_FAN);
+	{
+			glVertex3d(0, h, 0);
+		for (int i = 0; i < n; i++)
+		{
+			glVertex3d(r * sin(angleStep * i), 0, r * cos(angleStep * i));
+		}
+	}
+	glEnd();
+
+	glBegin(GL_TRIANGLE_FAN);
+	{
+		for (int i = 0; i < n; i++)
+		{
+			glVertex3d(r * sin(angleStep * i), 0, r * cos(angleStep * i));
+		}
+	}
+	glEnd();
+}
+
+
+void CGLRenderer::DrawSphere(double r, int segA, int segB)
+{
+	double stepA = 2 * PI / segA;
+	double stepB = 2 * PI / segB;
+
+	glBegin(GL_QUAD_STRIP);
+	{
+		for (int i = 0; i < segA; i++)				// Ovde se podesavaju podeoci visine sfere
+		{
+			for (int j = 0; j < segB; j++)
+			{
+				glVertex3f(r * cos(stepA * i) * cos(stepB * j),
+					r + r * sin(stepA * i),
+					r * cos(stepA * i) * sin(stepB * j));
+
+				glVertex3f(r * cos(stepA * (i + 1)) * cos(stepB * j),
+					r + r * sin(stepA * (i + 1)),
+					r * cos(stepA * (i + 1)) * sin(stepB * j));
+			}
+		}
+	}
+	glEnd();
+}
+
+
+void CGLRenderer::Zoom(bool out)
+{
+	eyeDistance += out ? 1 : -1;
+
+	double dwXY = PI * viewAngle[0] / 180;
+	double dwXZ = PI * viewAngle[1] / 180;
+
+	this->eyePosition[0] = this->eyeDistance * cos(dwXY) * cos(dwXZ);
+	this->eyePosition[1] = this->eyeDistance * sin(dwXY);
+	this->eyePosition[2] = this->eyeDistance * cos(dwXY) * sin(dwXZ);
 }

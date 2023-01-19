@@ -36,6 +36,7 @@ BEGIN_MESSAGE_MAP(COpenGL2020View, CView)
 	ON_WM_MOUSEWHEEL()
 	ON_WM_MOUSEMOVE()
 	ON_WM_MOUSEHWHEEL()
+	ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 // COpenGL2020View construction/destruction
@@ -205,4 +206,12 @@ void COpenGL2020View::OnMouseHWheel(UINT nFlags, short zDelta, CPoint pt)
 	}
 
 	CView::OnMouseHWheel(nFlags, zDelta, pt);
+}
+
+
+BOOL COpenGL2020View::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	glDC.Zoom(zDelta < 0);
+	Invalidate();
+	return CView::OnMouseWheel(nFlags, zDelta, pt);
 }
